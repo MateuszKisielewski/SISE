@@ -1,70 +1,48 @@
-import os
-from collections import deque
-
-def generuj_zbiory_testowe():
+def generuj_ukladanki():
     w, k = 4, 4
-    # Generujemy układ wzorcowy: (1, 2, 3, ..., 15, 0)
     wzorzec = tuple(list(range(1, w * k)) + [0])
-    
-    # Kolejka do przeszukiwania BFS: przechowuje (plansza, głębokość)
-    kolejka = deque([(wzorzec, 0)])
-    odwiedzone = {wzorzec}
-    
-    # Słownik do liczenia, ile plików wygenerowaliśmy dla danej głębokości
-    liczniki = {i: 0 for i in range(1, 8)}
-    
-    print("Rozpoczynam generowanie plików testowych...")
-    
-    while kolejka:
-        plansza, glebokosc = kolejka.popleft()
-        
-        # Zapisujemy pliki tylko dla głębokości od 1 do 7 (pomijamy głębokość 0, czyli sam wzorzec)
-        if 1 <= glebokosc <= 7:
-            liczniki[glebokosc] += 1
-            id_pliku = liczniki[glebokosc]
-            
-            # POPRAWKA: 05d gwarantuje dokładnie 5 cyfr (np. 00001)
-            nazwa_pliku = f"{w}x{k}_{glebokosc:02d}_{id_pliku:05d}.txt"
-            
-            with open(nazwa_pliku, 'w') as f:
-                f.write(f"{w} {k}\n")
-                for i in range(w):
-                    wiersz = plansza[i*k : (i+1)*k]
-                    f.write(" ".join(map(str, wiersz)) + "\n")
-                    
-        # Jeśli dotarliśmy do głębokości 7, nie szukamy już kolejnych sąsiadów
-        if glebokosc == 7:
-            continue
-            
-        # Generowanie wszystkich możliwych ruchów dla pustego pola (0)
-        idx_zera = plansza.index(0)
-        wiersz_zera, kolumna_zera = idx_zera // k, idx_zera % k
-        
-        mozliwe_ruchy = []
-        if wiersz_zera > 0: mozliwe_ruchy.append(idx_zera - k)     # Ruch w górę
-        if wiersz_zera < w - 1: mozliwe_ruchy.append(idx_zera + k) # Ruch w dół
-        if kolumna_zera > 0: mozliwe_ruchy.append(idx_zera - 1)    # Ruch w lewo
-        if kolumna_zera < k - 1: mozliwe_ruchy.append(idx_zera + 1)# Ruch w prawo
-        
-        for nowy_idx in mozliwe_ruchy:
-            nowa_plansza = list(plansza)
-            # Zamiana zera z kafelkiem
-            nowa_plansza[idx_zera], nowa_plansza[nowy_idx] = nowa_plansza[nowy_idx], nowa_plansza[idx_zera]
-            nowa_plansza_krotka = tuple(nowa_plansza)
-            
-            if nowa_plansza_krotka not in odwiedzone:
-                odwiedzone.add(nowa_plansza_krotka)
-                kolejka.append((nowa_plansza_krotka, glebokosc + 1))
-                
-    # Podsumowanie procesu
-    print("-" * 30)
-    print("Zakończono generowanie!")
-    suma = 0
-    for g, ile in liczniki.items():
-        print(f"Głębokość {g}: wygenerowano {ile} układów")
-        suma += ile
-    print("-" * 30)
-    print(f"Suma wygenerowanych plików: {suma}. (Dokładnie tyle ma być!)")
+    odwrotny = {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L', None: None}
 
-if __name__ == '__main__':
-    generuj_zbiory_testowe()
+    odwiedzone = {wzorzec}
+    biezaca_warstwa = [(wzorzec, None)]
+    calkowita_liczba = 0
+
+    for g in range(1, 8):
+        nastepna_warstwa = []
+
+        for plansza, ostatni_ruch in biezaca_warstwa:
+            idx_zera = plansza.index(0)
+            wz, kz = idx_zera // k, idx_zera % k
+
+            mozliwosci = [
+                (wz > 0,      idx_zera - k, 'U'),
+                (wz < w - 1, idx_zera + k, 'D'),
+                (kz > 0,      idx_zera - 1, 'L'),
+                (kz < k - 1, idx_zera + 1, 'R')
+            ]
+
+            for mozliwy, nowy_idx, ruch in mozliwosci:
+                if mozliwy and ruch != odwrotny[ostatni_ruch]:
+                    nowa_p = list(plansza)
+                    nowa_p[idx_zera], nowa_p[nowy_idx] = nowa_p[nowy_idx], nowa_p[idx_zera]
+                    nowa_p_krotka = tuple(nowa_p)
+
+                    if nowa_p_krotka not in odwiedzone:
+                        odwiedzone.add(nowa_p_krotka)
+                        nastepna_warstwa.append((nowa_p_krotka, ruch))
+
+        for i, (p, _) in enumerate(nastepna_warstwa, 1):
+            nazwa = f"{w}x{k}_{g:02d}_{i:04d}.txt"
+            with open(nazwa, 'w') as f:
+                f.write(f"{w} {k}\n")
+                for r in range(w):
+                    f.write(" ".join(map(str, p[r*k:(r+1)*k])) + "\n")
+            calkowita_liczba += 1
+
+        print(f"Głębokość {g:02d}: {len(nastepna_warstwa)} plansz")
+        biezaca_warstwa = nastepna_warstwa
+
+    print(f"Łącznie: {calkowita_liczba}")
+
+if __name__ == "__main__":
+    generuj_ukladanki()
