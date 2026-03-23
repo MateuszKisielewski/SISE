@@ -3,3 +3,5 @@
 *.exe
 .idea
 .thumbs
+.pycharm*
+__pycache__

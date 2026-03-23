@@ -15,18 +15,18 @@ plik_wejsciowy = sys.argv[3]
 plik_rozwiazanie = sys.argv[4]
 plik_statystyki = sys.argv[5]
 
-plansza, w, k = wczytaj_tekst_z_pliku(plik_wejsciowy)
-plansza, w, k = zbuduj_plansze_z_tekstu(plansza)
+tekst = wczytaj_tekst_z_pliku(plik_wejsciowy)
+plansza, wiersze, kolumny = zbuduj_plansze_z_tekstu(tekst)
 
 poczatek_czas = time.perf_counter()
 
 match strategia:
         case 'bfs':
-            wynik = bfs(plansza, w, k, parametr)
+            wynik = bfs(plansza, wiersze, kolumny, parametr)
         case 'dfs':
-            wynik = dfs(plansza, w, k, parametr)
+            wynik = dfs(plansza, wiersze, kolumny, parametr)
         case 'astr':
-            wynik = astar(plansza, w, k, parametr)
+            wynik = astar(plansza, wiersze, kolumny, parametr)
         case _:
             print("Nieznana strategia. Dostępne: bfs, dfs, astr")
             sys.exit(1)

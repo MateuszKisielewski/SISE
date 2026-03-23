@@ -37,8 +37,11 @@ def bfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
                 
     return None, stany_odwiedzone, stany_przetworzone, max_glebokosc
 
-def dfs(plansza, wiersze, kolumny, parametr):
-    pass
+def dfs(plansza, wiersze, kolumny, porzadek_sprawdzania):
+    wzor = koncowy_efekt_ukladanki(wiersze, kolumny)
+    stany_odwiedzone = 1
+    stany_przetworzone = 0
+    
 
 def astar(plansza, wiersze, kolumny, parametr):
     pass

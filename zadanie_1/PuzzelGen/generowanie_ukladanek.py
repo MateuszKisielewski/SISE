@@ -13,7 +13,7 @@ def generuj_zbiory_testowe():
     # Słownik do liczenia, ile plików wygenerowaliśmy dla danej głębokości
     liczniki = {i: 0 for i in range(1, 8)}
     
-    print("Rozpoczynam generowanie 413 plików testowych...")
+    print("Rozpoczynam generowanie plików testowych...")
     
     while kolejka:
         plansza, glebokosc = kolejka.popleft()
@@ -23,7 +23,7 @@ def generuj_zbiory_testowe():
             liczniki[glebokosc] += 1
             id_pliku = liczniki[glebokosc]
             
-            # Formatowanie nazwy pliku, np. 4x4_01_00001.txt
+            # POPRAWKA: 05d gwarantuje dokładnie 5 cyfr (np. 00001)
             nazwa_pliku = f"{w}x{k}_{glebokosc:02d}_{id_pliku:05d}.txt"
             
             with open(nazwa_pliku, 'w') as f:
@@ -64,7 +64,7 @@ def generuj_zbiory_testowe():
         print(f"Głębokość {g}: wygenerowano {ile} układów")
         suma += ile
     print("-" * 30)
-    print(f"Suma wygenerowanych plików: {suma} (Zgodnie z zadaniem powinno być 413).")
+    print(f"Suma wygenerowanych plików: {suma}. (Dokładnie tyle ma być!)")
 
 if __name__ == '__main__':
     generuj_zbiory_testowe()
