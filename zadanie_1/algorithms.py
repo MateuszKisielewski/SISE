@@ -1,4 +1,3 @@
-import time
 from collections import deque
 from manager import koncowy_efekt_ukladanki, pobierz_sasiadow
 
@@ -14,7 +13,7 @@ def bfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
 
     kolejka = deque([(plansza_startowa, "", 0)])
     odwiedzone = {plansza_startowa}
-    
+
     while kolejka:
         aktualna_plansza, sciezka, glebokosc = kolejka.popleft()
         
