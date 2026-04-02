@@ -16,7 +16,7 @@ def zbuduj_plansze_z_tekstu(linie_tekstu):
 def koncowy_efekt_ukladanki(liczba_wierszy, liczba_kolumn):
     return tuple(list(range(1, liczba_wierszy * liczba_kolumn)) + [0])
 
-def pobierz_sasiadow(plansza, liczba_wierszy, liczba_kolumn, porzadek_sprawdzania):
+def pobierz_sasiadow(plansza, liczba_wierszy, liczba_kolumn, porzadek_sprawdzania, ostatni_ruch):
     sasiedzi = []   
     stara_pozycja_zera = plansza.index(0)
     wiersz = stara_pozycja_zera // liczba_kolumn
@@ -29,7 +29,13 @@ def pobierz_sasiadow(plansza, liczba_wierszy, liczba_kolumn, porzadek_sprawdzani
         'D': (wiersz < liczba_wierszy - 1, stara_pozycja_zera + liczba_kolumn)
     }
 
+    przeciwne_ruchy = {'L': 'R', 'R': 'L', 'U': 'D', 'D': 'U'}
+    zakazany_ruch = przeciwne_ruchy.get(ostatni_ruch)
+
     for ruch in porzadek_sprawdzania:
+        if ruch == zakazany_ruch:
+            continue
+
         mozliwy, nowa_pozycja_zero = ruchy[ruch]
         if mozliwy:
             nowa_plansza = list(plansza)

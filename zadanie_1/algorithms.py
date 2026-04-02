@@ -22,7 +22,12 @@ def bfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
         if glebokosc > max_glebokosc:
             max_glebokosc = glebokosc
 
-        sasiedzi = pobierz_sasiadow(aktualna_plansza, wiersze, kolumny, porzadek_sprawdzania)
+        if len(sciezka) > 0:
+            ostatni_ruch = sciezka[-1]
+        else:
+            ostatni_ruch = ""
+
+        sasiedzi = pobierz_sasiadow(aktualna_plansza, wiersze, kolumny, porzadek_sprawdzania, ostatni_ruch)
         
         for nowa_plansza, ruch in sasiedzi:
             if nowa_plansza == wzor:
