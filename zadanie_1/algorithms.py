@@ -52,7 +52,7 @@ def dfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
     if plansza_startowa == wzor:
         return "", stany_odwiedzone, stany_przetworzone, max_glebokosc
 
-    stos = deque[(plansza_startowa, "", 0)]
+    stos = deque([(plansza_startowa, "", 0)])
     odwiedzone = {plansza_startowa}
 
     while stos:
