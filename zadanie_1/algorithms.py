@@ -88,5 +88,29 @@ def dfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
 
 
 def astar(plansza, wiersze, kolumny, parametr):
-    pass
+    def manhattan(plansza, wiersze, kolumny, parametr):
+        odleglosc = 0
+        for i, kafelek in enumerate(plansza):
+            if kafelek == 0:
+                continue
+            cel = kafelek - 1
+            wiersz_aktualny = i //kolumny
+            kolumna_aktualna = i % kolumny
+            wiersz_docelowy = cel //kolumny
+            kolumna_docelowa = cel % kolumny
+            odleglosc += abs(wiersz_aktualny - wiersz_docelowy) + abs(kolumna_aktualna - kolumna_docelowa)
+        return odleglosc
+
+    def hamming(plansza, wiersze, kolumny, parametr):
+        odleglosc = 0
+        for i, kafelek in enumerate(plansza):
+            if kafelek == 0:
+                continue
+            if kafelek != i+1:
+                odleglosc += 1
+        return odleglosc
+
+
+
+
 
