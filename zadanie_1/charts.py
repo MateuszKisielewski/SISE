@@ -30,7 +30,6 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     dane_dfs = df[df['Strategia'] == 'dfs'].groupby(['Glebokosc', 'Parametr'])[kolumna].mean().unstack()
 
     figure, axes = plt.subplots(figsize=(12, 10), nrows=2, ncols=2)
-    figure.suptitle(f'Kryterium: {tytul_osi_y}', fontsize=16, fontweight='bold')
     plt.tight_layout(pad=3.5)
 
     dane_ogolem.plot(kind='bar', ax=axes[0, 0])
