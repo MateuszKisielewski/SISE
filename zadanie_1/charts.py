@@ -20,6 +20,8 @@ kryteria = {
     'Czas': ('Czas trwania [ms]', True)
 }
 
+id_png = 1
+
 for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
 
     dane_ogolem = df.groupby(['Glebokosc', 'Strategia'])[kolumna].mean().unstack()
@@ -62,5 +64,9 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[1, 1].tick_params(axis='x', labelsize=10)
     if log_scale:
         axes[1, 1].set_yscale('log')
+
+
+    plt.savefig(f"{id_png}.png", bbox_inches='tight')
+    id_png += 1
 
     plt.show()
