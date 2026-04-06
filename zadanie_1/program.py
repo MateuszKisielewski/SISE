@@ -6,7 +6,7 @@ from algorithms import bfs, dfs, astar
 
 def main():
     if len(sys.argv) != 6:
-        print("Użycie: .\\program <strategia> <parametr> <plik_wej> <plik_roz> <plik_stat>")
+        print("Użycie: python program.py <strategia> <parametr> <plik_wej> <plik_roz> <plik_stat>")
         sys.exit(1)
 
     strategia = sys.argv[1]
