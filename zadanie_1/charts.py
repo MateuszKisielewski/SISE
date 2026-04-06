@@ -32,7 +32,7 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     figure, axes = plt.subplots(figsize=(12, 10), nrows=2, ncols=2)
     plt.tight_layout(pad=3.5)
 
-    dane_ogolem.plot(kind='bar', ax=axes[0, 0])
+    dane_ogolem.plot(kind='bar', ax=axes[0, 0], rot=0)
     axes[0, 0].set_title('Ogółem', fontsize=14)
     axes[0, 0].set_xlabel('Głębokość', fontsize=12)
     axes[0, 0].set_ylabel(tytul_osi_y, fontsize=12)
@@ -40,7 +40,7 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     if log_scale:
         axes[0, 0].set_yscale('log')
 
-    dane_astr.plot(kind='bar', ax=axes[0, 1])
+    dane_astr.plot(kind='bar', ax=axes[0, 1], rot=0)
     axes[0, 1].set_title('A*', fontsize=14)
     axes[0, 1].set_xlabel('Głębokość', fontsize=12)
     axes[0, 1].set_ylabel(tytul_osi_y, fontsize=12)
@@ -48,7 +48,7 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     if log_scale:
         axes[0, 1].set_yscale('log')
 
-    dane_bfs.plot(kind='bar', ax=axes[1, 0], colormap='tab10')
+    dane_bfs.plot(kind='bar', ax=axes[1, 0], colormap='tab10', rot=0)
     axes[1, 0].set_title('BFS', fontsize=14)
     axes[1, 0].set_xlabel('Głębokość', fontsize=12)
     axes[1, 0].set_ylabel(tytul_osi_y, fontsize=12)
@@ -56,7 +56,7 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     if log_scale:
         axes[1, 0].set_yscale('log')
 
-    dane_dfs.plot(kind='bar', ax=axes[1, 1], colormap='tab10')
+    dane_dfs.plot(kind='bar', ax=axes[1, 1], colormap='tab10', rot=0)
     axes[1, 1].set_title('DFS', fontsize=14)
     axes[1, 1].set_xlabel('Głębokość', fontsize=12)
     axes[1, 1].set_ylabel(tytul_osi_y, fontsize=12)
