@@ -6,3 +6,6 @@
 .pycharm*
 __pycache__
 .vscode
+.txt
+*.txt
+*.Sol
