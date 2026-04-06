@@ -38,7 +38,6 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[0, 0].set_xlabel('Głębokość', fontsize=12)
     axes[0, 0].set_ylabel(tytul_osi_y, fontsize=12)
     axes[0, 0].tick_params(axis='x', labelsize=10)
-    axes[0, 0].grid(axis='y', linestyle='--', alpha=0.7)
     if log_scale:
         axes[0, 0].set_yscale('log')
 
@@ -49,7 +48,6 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[0, 1].set_xlabel('Głębokość', fontsize=12)
     axes[0, 1].set_ylabel(tytul_osi_y, fontsize=12)
     axes[0, 1].tick_params(axis='x', labelsize=10)
-    axes[0, 1].grid(axis='y', linestyle='--', alpha=0.7)
     if log_scale:
         axes[0, 1].set_yscale('log')
 
@@ -60,7 +58,6 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[1, 0].set_xlabel('Głębokość', fontsize=12)
     axes[1, 0].set_ylabel(tytul_osi_y, fontsize=12)
     axes[1, 0].tick_params(axis='x', labelsize=10)
-    axes[1, 0].grid(axis='y', linestyle='--', alpha=0.7)
     if log_scale:
         axes[1, 0].set_yscale('log')
 
@@ -71,7 +68,6 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[1, 1].set_xlabel('Głębokość', fontsize=12)
     axes[1, 1].set_ylabel(tytul_osi_y, fontsize=12)
     axes[1, 1].tick_params(axis='x', labelsize=10)
-    axes[1, 1].grid(axis='y', linestyle='--', alpha=0.7)
     if log_scale:
         axes[1, 1].set_yscale('log')
 
