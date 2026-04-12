@@ -17,7 +17,7 @@ kryteria = {
     'Odwiedzone': ('Liczba stanów odwiedzonych', True),
     'Przetworzone': ('Liczba stanów przetworzonych', True),
     'MaxGlebokosc': ('Maksymalna głębokość rekursji', False),
-    'Czas': ('Czas trwania [ms]', False)
+    'Czas': ('Czas trwania [ms]', True)
 }
 
 id_png = 1
@@ -40,10 +40,7 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     if (kolumna == 'Dlugosc'):
         axes[0, 0].set_yticks([0,2,4,6,8,10,12,14,16, 18, 20])
     else:
-        if (kolumna == 'MaxGlebokosc'):
-            axes[0, 0].set_yscale('log')
-            axes[0, 0].set_yticks([0.01, 1, 10])
-        else:
+        if log_scale:
             axes[0, 0].set_yscale('log')
 
     dane_astr.plot(kind='bar', ax=axes[0, 1], rot=0)
@@ -66,7 +63,8 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     if (kolumna == 'Dlugosc'):
         axes[1, 1].set_yticks([0,2,4,6,8,10,12,14,16, 18, 20])
     else:
-        axes[1, 1].set_yscale('log')
+        if log_scale:
+            axes[1, 1].set_yscale('log')
 
     plt.savefig(f"a{id_png}.png", bbox_inches='tight')
     id_png += 1
