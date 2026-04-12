@@ -13,11 +13,11 @@ for col in kolumny_liczbowe:
     df[col] = pd.to_numeric(df[col])
 
 kryteria = {
-    'Dlugosc': ('Długość znalezionego rozwiązania', False),
+    'Dlugosc': ('Długość znalezionego rozwiązania', True),
     'Odwiedzone': ('Liczba stanów odwiedzonych', True),
     'Przetworzone': ('Liczba stanów przetworzonych', True),
     'MaxGlebokosc': ('Maksymalna głębokość rekursji', False),
-    'Czas': ('Czas trwania [ms]', True)
+    'Czas': ('Czas trwania [ms]', False)
 }
 
 id_png = 1
@@ -37,6 +37,8 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[0, 0].set_xlabel('Głębokość', fontsize=12)
     axes[0, 0].set_ylabel(tytul_osi_y, fontsize=12)
     axes[0, 0].tick_params(axis='x', labelsize=10)
+    if (kolumna == 'Odwiedzone' or kolumna == 'MaxGlebokosc') and log_scale:
+        axes[0, 0].set_yticks([0.1, 0, 10, 100, 1000, 10000, 100000, 1000000])
     if log_scale:
         axes[0, 0].set_yscale('log')
 
@@ -45,27 +47,24 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[0, 1].set_xlabel('Głębokość', fontsize=12)
     axes[0, 1].set_ylabel(tytul_osi_y, fontsize=12)
     axes[0, 1].tick_params(axis='x', labelsize=10)
-    if log_scale:
-        axes[0, 1].set_yscale('log')
 
     dane_bfs.plot(kind='bar', ax=axes[1, 0], colormap='tab10', rot=0)
     axes[1, 0].set_title('BFS', fontsize=14)
     axes[1, 0].set_xlabel('Głębokość', fontsize=12)
     axes[1, 0].set_ylabel(tytul_osi_y, fontsize=12)
     axes[1, 0].tick_params(axis='x', labelsize=10)
-    if log_scale:
-        axes[1, 0].set_yscale('log')
 
     dane_dfs.plot(kind='bar', ax=axes[1, 1], colormap='tab10', rot=0)
     axes[1, 1].set_title('DFS', fontsize=14)
     axes[1, 1].set_xlabel('Głębokość', fontsize=12)
     axes[1, 1].set_ylabel(tytul_osi_y, fontsize=12)
     axes[1, 1].tick_params(axis='x', labelsize=10)
+    if (kolumna == 'Odwiedzone' or kolumna == 'MaxGlebokosc'):
+        axes[1, 1].set_yticks([0.1, 0, 10, 100, 1000, 10000, 100000, 1000000])
     if log_scale:
         axes[1, 1].set_yscale('log')
 
-
-    plt.savefig(f"{id_png}.png", bbox_inches='tight')
+    plt.savefig(f"a{id_png}.png", bbox_inches='tight')
     id_png += 1
 
     plt.show()
