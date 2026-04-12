@@ -37,10 +37,14 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[0, 0].set_xlabel('Głębokość', fontsize=12)
     axes[0, 0].set_ylabel(tytul_osi_y, fontsize=12)
     axes[0, 0].tick_params(axis='x', labelsize=10)
-    if (kolumna == 'Odwiedzone' or kolumna == 'MaxGlebokosc') and log_scale:
-        axes[0, 0].set_yticks([0.1, 0, 10, 100, 1000, 10000, 100000, 1000000])
-    if log_scale:
-        axes[0, 0].set_yscale('log')
+    if (kolumna == 'Dlugosc'):
+        axes[0, 0].set_yticks([0,2,4,6,8,10,12,14,16, 18, 20])
+    else:
+        if (kolumna == 'MaxGlebokosc'):
+            axes[0, 0].set_yscale('log')
+            axes[0, 0].set_yticks([0.01, 1, 10])
+        else:
+            axes[0, 0].set_yscale('log')
 
     dane_astr.plot(kind='bar', ax=axes[0, 1], rot=0)
     axes[0, 1].set_title('A*', fontsize=14)
@@ -59,9 +63,9 @@ for kolumna, (tytul_osi_y, log_scale) in kryteria.items():
     axes[1, 1].set_xlabel('Głębokość', fontsize=12)
     axes[1, 1].set_ylabel(tytul_osi_y, fontsize=12)
     axes[1, 1].tick_params(axis='x', labelsize=10)
-    if (kolumna == 'Odwiedzone' or kolumna == 'MaxGlebokosc'):
-        axes[1, 1].set_yticks([0.1, 0, 10, 100, 1000, 10000, 100000, 1000000])
-    if log_scale:
+    if (kolumna == 'Dlugosc'):
+        axes[1, 1].set_yticks([0,2,4,6,8,10,12,14,16, 18, 20])
+    else:
         axes[1, 1].set_yscale('log')
 
     plt.savefig(f"a{id_png}.png", bbox_inches='tight')

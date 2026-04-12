@@ -33,6 +33,10 @@ def bfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
         for nowa_plansza, ruch in sasiedzi:
             if nowa_plansza == wzor:
                 stany_odwiedzone += 1
+                
+                if glebokosc + 1 > max_glebokosc:
+                    max_glebokosc = glebokosc + 1
+                    
                 return sciezka + ruch, stany_odwiedzone, stany_przetworzone, max_glebokosc
 
             if nowa_plansza not in odwiedzone:
@@ -77,6 +81,10 @@ def dfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
         for nowa_plansza, ruch in reversed(sasiedzi):
             if nowa_plansza == wzor:
                 stany_odwiedzone += 1
+
+                if glebokosc + 1 > max_glebokosc:
+                    max_glebokosc = glebokosc + 1
+
                 return sciezka + ruch, stany_odwiedzone, stany_przetworzone, max_glebokosc
 
             nowa_glebokosc = glebokosc + 1
@@ -88,6 +96,8 @@ def dfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
     return None, stany_odwiedzone, stany_przetworzone, max_glebokosc
 
 
+import heapq
+from manager import koncowy_efekt_ukladanki, pobierz_sasiadow
 
 def astar(plansza, wiersze, kolumny, parametr):
     def manhattan(plansza):
@@ -133,13 +143,13 @@ def astar(plansza, wiersze, kolumny, parametr):
     while kolejka:
         f, g, _, aktualna_plansza, sciezka = heapq.heappop(kolejka)
         
+        if g > max_glebokosc:
+            max_glebokosc = g
+        
         if aktualna_plansza == wzor:
             return sciezka, stany_odwiedzone, stany_przetworzone, max_glebokosc
 
         stany_przetworzone += 1
-
-        if g > max_glebokosc:
-            max_glebokosc = g
 
         if len(sciezka) > 0:
             ostatni_ruch = sciezka[-1]
