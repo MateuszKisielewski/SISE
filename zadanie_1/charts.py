@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 kolumny = ['Glebokosc', 'ID', 'Strategia', 'Parametr', 'Dlugosc', 'Odwiedzone', 'Przetworzone', 'MaxGlebokosc', 'Czas']
 
-df = pd.read_csv('wyniki.csv', names=kolumny, encoding='utf-8')
+df = pd.read_csv('wyniki2.csv', names=kolumny, encoding='utf-8')
 
 if df.iloc[0]['Glebokosc'] == 'Glebokosc':
     df = df.iloc[1:]
