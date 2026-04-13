@@ -5,9 +5,6 @@ kolumny = ['Glebokosc', 'ID', 'Strategia', 'Parametr', 'Dlugosc', 'Odwiedzone', 
 
 df = pd.read_csv('wyniki2.csv', names=kolumny, encoding='utf-8')
 
-if df.iloc[0]['Glebokosc'] == 'Glebokosc':
-    df = df.iloc[1:]
-
 kolumny_liczbowe = ['Glebokosc', 'Dlugosc', 'Odwiedzone', 'Przetworzone', 'MaxGlebokosc', 'Czas']
 for col in kolumny_liczbowe:
     df[col] = pd.to_numeric(df[col])
