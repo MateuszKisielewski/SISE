@@ -95,10 +95,6 @@ def dfs(plansza_startowa, wiersze, kolumny, porzadek_sprawdzania):
 
     return None, stany_odwiedzone, stany_przetworzone, max_glebokosc
 
-
-import heapq
-from manager import koncowy_efekt_ukladanki, pobierz_sasiadow
-
 def astar(plansza, wiersze, kolumny, parametr):
     def manhattan(plansza):
         odleglosc = 0
