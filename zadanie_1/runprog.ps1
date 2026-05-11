@@ -77,8 +77,6 @@ function RunAstr([string]$heuristic) {
 }
 
 function RunAll() {
-    RunBfs
-    RunDfs
     RunAstr
 }
 
