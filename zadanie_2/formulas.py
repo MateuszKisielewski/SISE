@@ -33,17 +33,17 @@ def blad_globalny_mse(lista_bledow):
     return mse
 
 def oblicz_precyzje(true_positives, false_positives):
-    if (true_positives == 0 and false_positives == 0):
+    if true_positives == 0 and false_positives == 0:
         return 0.0
     return true_positives / (true_positives + false_positives)
 
 def oblicz_czulosc(prawdziwie_pozytywnme, falszywie_negatywne):
-    if (prawdziwie_pozytywnme == 0 and falszywie_negatywne == 0):
+    if prawdziwie_pozytywnme == 0 and falszywie_negatywne == 0:
         return 0.0
     return prawdziwie_pozytywnme / (prawdziwie_pozytywnme + falszywie_negatywne)
 
 def oblicz_f1_score(precision, recall):
-    if (precision + recall == 0):
+    if precision + recall == 0:
         return 0.0
     return 2 * (precision * recall) / (precision + recall)
 
