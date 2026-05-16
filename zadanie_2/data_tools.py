@@ -28,8 +28,6 @@ def zapisz_model(nazwa_pliku, czy_bias, wagi, biasy):
     with open(nazwa_pliku, 'w') as plik:
         json.dump(stan_sieci, plik, indent=4)
 
-zapisz_model("chuj1.txt", "true", 2, 1)
-
 
 def zapisz_historie_nauki(nazwa_pliku, historia_bledow):
     with open(nazwa_pliku, 'w') as plik:
@@ -39,9 +37,6 @@ def zapisz_historie_nauki(nazwa_pliku, historia_bledow):
             epoka = dane[0]
             blad = dane[1]
             plik.write(f"{epoka} , {blad}\n")
-
-historia_bledow = [[1,0.23],[2,0.15]]
-zapisz_historie_nauki("chuj2.txt", historia_bledow)
 
 
 def zapisz_log_testowy(nazwa_pliku, log, wzorzec_we, oczekiwane_wy, blad_wzorca, bledy_wyjsciowe, wartosci_wyjsciowe_warstw, wagi):
@@ -62,23 +57,3 @@ def zapisz_log_testowy(nazwa_pliku, log, wzorzec_we, oczekiwane_wy, blad_wzorca,
             plik.write(f"Wagi: {wagi[i]}\n\n")
 
         plik.write("\n")
-
-
-nazwa_pliku = "chuj3.txt"
-log = "3"
-wzorzec_we = [1.0, 0.0]
-oczekiwane_wy = [1.0]
-blad_wzorca = 0.045
-bledy_wyjsciowe = [0.212]
-
-wartosci_wyjsciowe_warstw = [
-    [0.65, 0.42, 0.88],
-    [0.788]
-]
-
-wagi = [
-    [ [0.15, -0.22], [0.44, 0.51], [-0.31, 0.85] ],
-    [ [0.55, -0.41, 0.92] ]
-]
-
-zapisz_log_testowy(nazwa_pliku, log, wzorzec_we, oczekiwane_wy, blad_wzorca, bledy_wyjsciowe, wartosci_wyjsciowe_warstw, wagi)
