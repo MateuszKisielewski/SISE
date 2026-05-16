@@ -68,7 +68,7 @@ def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, doce
             pojedynczy_blad_wzorca = blad_pojedynczego_wzorca(oczekiwane_wyjscie, otrzymane_wyjscie)
             bledy_wzorcow_w_epoce.append(pojedynczy_blad_wzorca)
 
-            wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = propagacja_wsteczna(wejscie, aktywacje_wartsw, oczekiwane_wyjscia, wagi, biasy, wspolczynnik_nauki, momentum, poprzednie_zmiany_wag, poprzednie_zmiany_biasow, czy_bias)
+            wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = propagacja_wsteczna(wejscie, aktywacje_wartsw, oczekiwane_wyjscie, wagi, biasy, wspolczynnik_nauki, momentum, poprzednie_zmiany_wag, poprzednie_zmiany_biasow, czy_bias)
 
         globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce)
 
@@ -96,8 +96,8 @@ def testuj_siec(dane_wejsciowe, oczekiwane_wyjscia, wagi, biasy, czy_bias, nazwa
         pojedynczy_blad_wzorca = blad_pojedynczego_wzorca(oczekiwane_wyjscie, otrzymane_wyjscie)
 
         bledy_wyjsciowe = []
-        for k in range(len(oczekiwane_wyjscia)):
-            bledy_wyjsciowe.append(oczekiwane_wyjscia[k] - otrzymane_wyjscie[k])
+        for k in range(len(oczekiwane_wyjscie)):
+            bledy_wyjsciowe.append(oczekiwane_wyjscie[k] - otrzymane_wyjscie[k])
 
         zapisz_log_testowy(nazwa_pliku_logu, str(i + 1), wejscie, oczekiwane_wyjscie, pojedynczy_blad_wzorca, bledy_wyjsciowe, aktywacje, wagi )
 
