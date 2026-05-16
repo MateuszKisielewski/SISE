@@ -1,5 +1,9 @@
 import random
 
+from zadanie_2.data_tools import zapisz_historie_nauki
+from zadanie_2.formulas import propagacja_w_przod, blad_pojedynczego_wzorca, propagacja_wsteczna, blad_globalny_mse
+
+
 def inicjalizuj_siec(rozmiary_warstw, czy_bias):
     wagi = []
     biasy = []
@@ -41,6 +45,43 @@ def inicjalizuj_siec(rozmiary_warstw, czy_bias):
 
     return wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow
 
-def trenuj_siec():
+def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu):
+
+    wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = inicjalizuj_siec(rozmiary_warstw, czy_bias)
+    historia_bledow = []
+
+    for epoka in range(1, epoki + 1):
+        indeksy = list(range(len(dane_wejsciowe)))
+
+        if losowa_kolejnosc:
+            random.shuffle(indeksy)
+
+        bledy_wzorcow_w_epoce = []
+
+        for i in indeksy:
+            wejscie = dane_wejsciowe[i]
+            oczekiwane_wyjscie = oczekiwane_wyjscia[i]
+
+            aktywacje_wartsw = propagacja_w_przod(wejscie, wagi, biasy, czy_bias)
+            otrzymane_wyjscie = aktywacje_wartsw[-1]
+
+            pojedynczy_blad_wzorca = blad_pojedynczego_wzorca(oczekiwane_wyjscie, otrzymane_wyjscie)
+            bledy_wzorcow_w_epoce.append(pojedynczy_blad_wzorca)
+
+            wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = propagacja_wsteczna(wejscie, aktywacje_wartsw, oczekiwane_wyjscia, wagi, biasy, wspolczynnik_nauki, momentum, poprzednie_zmiany_wag, poprzednie_zmiany_biasow, czy_bias)
+
+            globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce)
+
+            if epoka == 1 or epoka % co_ile_zapis_log == 0:
+                historia_bledow.append([epoka, globalny_mse])
+
+            if globalny_mse <= docelowy_blad:
+                if epoka % co_ile_zapis_log != 0 and epoka != 1:
+                    historia_bledow.append([epoka, globalny_mse])
+                break
+
+    zapisz_historie_nauki(nazwa_pliku_logu, historia_bledow)
+
+    return wagi, biasy
 
 def testuj_siec():
