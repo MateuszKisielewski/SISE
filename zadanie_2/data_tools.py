@@ -29,6 +29,17 @@ def zapisz_model(nazwa_pliku, czy_bias, wagi, biasy):
         json.dump(stan_sieci, plik, indent=4)
 
 
+def wczytaj_model(nazwa_pliku):
+    with open(nazwa_pliku, 'r') as plik:
+        stan_sieci = json.load(plik)
+
+    czy_bias = stan_sieci["czy_bias"]
+    wagi = stan_sieci["wagi"]
+    biasy = stan_sieci["biasy"]
+
+    return wagi, biasy, czy_bias
+
+
 def zapisz_historie_nauki(nazwa_pliku, historia_bledow):
     with open(nazwa_pliku, 'w') as plik:
         plik.write("Epoka , blad_glowny \n")
