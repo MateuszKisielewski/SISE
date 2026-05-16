@@ -83,3 +83,4 @@ def propagacja_wsteczna(sygnaly_wejsciowe, aktywacje_warstw, oczekiwane_wyjscia,
                 zmiana_biasu = (wspolczynnik_nauki * delty_wszystkich_warstw[i][j]) + (momentum * poprzednie_zmiany_biasow[i][j])
                 biasy[i][j] += zmiana_biasu
                 poprzednie_zmiany_biasow[i][j] = zmiana_biasu
+    return wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow
