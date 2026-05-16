@@ -57,7 +57,29 @@ def propagacja_wsteczna(sygnaly_wejsciowe, aktywacje_warstw, oczekiwane_wyjscia,
         delty_wyjsciowe.append(delta)
     delty_wszystkich_warstw = []
     delty_wszystkich_warstw.insert(0, delty_wyjsciowe)
+    
     for i in range(len(wagi) - 2, -1, -1):
-        suma+=delty_wszystkich_warstw[0] * wagi[i]
-        delta = suma * pochodna_sigmoidy(aktywacje_warstw[i])
-        delty_wszystkich_warstw.insert(0, delta)
+        delty_tej_warstwy = []
+        for j in range(len(wagi[i])):
+            suma = 0
+            for k in range(len(wagi[i + 1])):
+                delta_nastepnej = delty_wszystkich_warstw[0][k]
+                waga_polaczenia = wagi[i + 1][k][j]
+                suma += delta_nastepnej * waga_polaczenia
+            delta_neuronu = suma * pochodna_sigmoidy(aktywacje_warstw[i][j])
+            delty_tej_warstwy.append(delta_neuronu)
+        delty_wszystkich_warstw.insert(0, delty_tej_warstwy)
+    for i in range(len(wagi)):
+        if i == 0:
+            wejscie_do_warstwy = sygnaly_wejsciowe
+        else:
+            wejscie_do_warstwy = aktywacje_warstw[i - 1]
+        for j in range(len(wagi[i])):
+            for k in range(len(wagi[i][j])):
+                zmiana_wagi = (wspolczynnik_nauki * delty_wszystkich_warstw[i][j] * wejscie_do_warstwy[k]) + (momentum * poprzednie_zmiany_wag[i][j][k])
+                wagi[i][j][k] += zmiana_wagi
+                poprzednie_zmiany_wag[i][j][k] = zmiana_wagi
+            if czy_bias:
+                zmiana_biasu = (wspolczynnik_nauki * delty_wszystkich_warstw[i][j]) + (momentum * poprzednie_zmiany_biasow[i][j])
+                biasy[i][j] += zmiana_biasu
+                poprzednie_zmiany_biasow[i][j] = zmiana_biasu
