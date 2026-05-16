@@ -1,6 +1,6 @@
 import random
 
-from zadanie_2.data_tools import zapisz_historie_nauki
+from zadanie_2.data_tools import zapisz_historie_nauki, zapisz_log_testowy
 from zadanie_2.formulas import propagacja_w_przod, blad_pojedynczego_wzorca, propagacja_wsteczna, blad_globalny_mse
 
 
@@ -70,18 +70,37 @@ def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, doce
 
             wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = propagacja_wsteczna(wejscie, aktywacje_wartsw, oczekiwane_wyjscia, wagi, biasy, wspolczynnik_nauki, momentum, poprzednie_zmiany_wag, poprzednie_zmiany_biasow, czy_bias)
 
-            globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce)
+        globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce)
 
-            if epoka == 1 or epoka % co_ile_zapis_log == 0:
+        if epoka == 1 or epoka % co_ile_zapis_log == 0:
+            historia_bledow.append([epoka, globalny_mse])
+
+        if globalny_mse <= docelowy_blad:
+            if epoka % co_ile_zapis_log != 0 and epoka != 1:
                 historia_bledow.append([epoka, globalny_mse])
-
-            if globalny_mse <= docelowy_blad:
-                if epoka % co_ile_zapis_log != 0 and epoka != 1:
-                    historia_bledow.append([epoka, globalny_mse])
-                break
+            break
 
     zapisz_historie_nauki(nazwa_pliku_logu, historia_bledow)
 
     return wagi, biasy
 
-def testuj_siec():
+def testuj_siec(dane_wejsciowe, oczekiwane_wyjscia, wagi, biasy, czy_bias, nazwa_pliku_logu):
+    rzeczywiste_wyjscia_sieci = []
+    for i in range(len(dane_wejsciowe)):
+        wejscie = dane_wejsciowe[i]
+        oczekiwane_wyjscie = oczekiwane_wyjscia[i]
+
+        aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias)
+        otrzymane_wyjscie = aktywacje[-1]
+
+        pojedynczy_blad_wzorca = blad_pojedynczego_wzorca(oczekiwane_wyjscie, otrzymane_wyjscie)
+
+        bledy_wyjsciowe = []
+        for k in range(len(oczekiwane_wyjscia)):
+            bledy_wyjsciowe.append(oczekiwane_wyjscia[k] - otrzymane_wyjscie[k])
+
+        zapisz_log_testowy(nazwa_pliku_logu, str(i + 1), wejscie, oczekiwane_wyjscie, pojedynczy_blad_wzorca, bledy_wyjsciowe, aktywacje, wagi )
+
+        rzeczywiste_wyjscia_sieci.append(otrzymane_wyjscie)
+
+    return rzeczywiste_wyjscia_sieci
