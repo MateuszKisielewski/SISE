@@ -58,3 +58,6 @@ def propagacja_wsteczna(sygnaly_wejsciowe, aktywacje_warstw, oczekiwane_wyjscia,
     delty_wszystkich_warstw = []
     delty_wszystkich_warstw.insert(0, delty_wyjsciowe)
     for i in range(len(wagi) - 2, -1, -1):
+        suma+=delty_wszystkich_warstw[0] * wagi[i]
+        delta = suma * pochodna_sigmoidy(aktywacje_warstw[i])
+        delty_wszystkich_warstw.insert(0, delta)
