@@ -82,7 +82,7 @@ def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, doce
 
     zapisz_historie_nauki(nazwa_pliku_logu, historia_bledow)
 
-    return wagi, biasy
+    return wagi, biasy, epoka, globalny_mse
 
 def testuj_siec(dane_wejsciowe, oczekiwane_wyjscia, wagi, biasy, czy_bias, nazwa_pliku_logu):
     rzeczywiste_wyjscia_sieci = []
