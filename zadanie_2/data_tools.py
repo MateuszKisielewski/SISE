@@ -3,7 +3,7 @@ import json
 import pandas as pd
 
 def wczytaj_plik_irysy (plik_csv):
-    df = pd.read_csv(plik_csv, header=None, sep=';')
+    df = pd.read_csv(plik_csv, header=None, sep=',')
     dane_wejsciowe = df.iloc[:,0:4].values.tolist()
     etykiety = df.iloc[:,4].values.tolist()
 
