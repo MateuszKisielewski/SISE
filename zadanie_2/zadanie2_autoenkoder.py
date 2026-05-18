@@ -14,12 +14,12 @@ def siec_autoenkoder():
     docelowy_blad = 0.01
 
     while True:
-        print("\nmenu:")
+        print("\nMenu:")
         print("1 - Uczenie z biasem (współczynnik uczenia = 0,6)")
         print("2 - Uczenie bez biasu (współczynnik uczenia = 0,6)")
         print("3 - Uczenie z różnymi kombinacjami")
         print("4 - Wczytaj sieć z pliku i przetestuj")
-        print("6 - Zakończ")
+        print("6 - Wyjdź z zadania")
 
         wybor = input("wybór: ")
 
@@ -82,12 +82,7 @@ def siec_autoenkoder():
                     print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[0][0]:.4f}, {aktywacje[0][1]:.4f}]")
 
             case "6":
-                print("Koniec programu")
                 break
 
             case _:
                 print("Wybrałeś niepoprawną opcję")
-
-
-if __name__ == "__main__":
-    siec_autoenkoder()

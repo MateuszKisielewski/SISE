@@ -32,10 +32,10 @@ def siec_irysy():
     biasy = None
 
     while True:
-        print("\nmenu:")
+        print("\nMenu:")
         print("1 - Wczytaj gotowy model i testuj")
         print("2 - Trenuj nowy model i testuj")
-        print("3 - Zakończ")
+        print("3 - Wyjdź z zadania")
         
         wybor = input("wybór: ")
         
@@ -66,11 +66,7 @@ def siec_irysy():
                         poprawne += 1
                 print(f"Poprawnie sklasyfikowano {poprawne} z {len(y_test)} irysów.")
             case "3":
-                print("Koniec programu")
                 break
                 
             case _:
                 print("Wybrałeś niepoprawną opcję")
-
-if __name__ == "__main__":  
-    siec_irysy()
