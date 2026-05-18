@@ -18,6 +18,13 @@ def wczytaj_plik_irysy (plik_csv):
 
     return dane_wejsciowe, oczekiwane_dane_wyjsciowe
 
+def wczytaj_plik_autoenkoder(plik_csv):
+    df = pd.read_csv(plik_csv, header=None, sep=',')
+    dane_wejsciowe = df.iloc[:,0:4].values.tolist()
+    oczekiwane_dane_wyjsciowe = df.iloc[:,4:8].values.tolist()
+
+    return dane_wejsciowe, oczekiwane_dane_wyjsciowe
+
 def zapisz_model(nazwa_pliku, czy_bias, wagi, biasy):
     stan_sieci = {
         "czy_bias": czy_bias,
@@ -96,14 +103,14 @@ def wprowadzanie_danych_do_programu ():
     momentum = float(input("Wybór: "))
 
     print("Czy używać biasu? (tak/nie): ")
-    czy_bias = input("Wybór: ")
+    czy_bias = input("Wybór: ").lower()
     if czy_bias == "tak":
         czy_bias = True 
     if czy_bias == "nie":    
         czy_bias = False
 
     print("Czy losować kolejność danych podczas nauki? (tak/nie): ")
-    losowa_kolejnosc = input("Wybór: ")
+    losowa_kolejnosc = input("Wybór: ").lower()
     if losowa_kolejnosc == "tak":
         losowa_kolejnosc = True
     if losowa_kolejnosc == "nie":
@@ -115,4 +122,7 @@ def wprowadzanie_danych_do_programu ():
     print("Podaj nazwę pliku do zapisu historii nauki (np. historia.txt): ")
     nazwa_pliku_logu = input("Wybór: ")
 
-    return rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu
+    print("Podaj nazwę pliku do zapisu modelu (np. model.json): ")
+    nazwa_pliku_modelu = input("Wybór: ")
+
+    return rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu, nazwa_pliku_modelu

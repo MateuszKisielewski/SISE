@@ -1,88 +1,96 @@
 import json
 from formulas import propagacja_w_przod
 from neural_network import trenuj_siec
-from data_tools import zapisz_model, wczytaj_model
+from data_tools import zapisz_model, wczytaj_model, wczytaj_plik_autoenkoder, wprowadzanie_danych_do_programu
 
 
 def siec_autoenkoder():
-    rozmiary_warstw = [4, 2, 4]
+    print("Podaj nazwe pliku z danymi wejściowymi (np. dane_autoenkoder.csv): ")
+    nazwa_pliku = input("nazwa pliku: ")
+    dane_wejsciowe, oczekiwane_wyjsciowe = wczytaj_plik_autoenkoder(nazwa_pliku)
+    pomin_petle = False
 
-    dane_wejsciowe = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
-    oczekiwane_wyjsciowe = dane_wejsciowe
+    czy_wczytywanie_sieci_z_pliku = input("Czy chcesz wczytać sieć z pliku? (tak/nie): ").lower()
 
-    epoki_max = 1000
-    docelowy_blad = 0.01
+    if czy_wczytywanie_sieci_z_pliku == "tak":
+        nazwa_pliku = input("Podaj nazwę pliku z modelem: ")
+        wagi, biasy, czy_bias = wczytaj_model(nazwa_pliku)
+    else:
+        if czy_wczytywanie_sieci_z_pliku == "nie":
+            rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu, nazwa_pliku_modelu = wprowadzanie_danych_do_programu()
+        else:
+            print("Wybrałeś niepoprawną opcję. Wyjście z zadania")
+            pomin_petle = True
 
-    while True:
-        print("\nMenu:")
-        print("1 - Uczenie z biasem (współczynnik uczenia = 0,6)")
-        print("2 - Uczenie bez biasu (współczynnik uczenia = 0,6)")
-        print("3 - Uczenie z różnymi kombinacjami")
-        print("4 - Wczytaj sieć z pliku i przetestuj")
-        print("6 - Wyjdź z zadania")
+    if pomin_petle == False:
+        while True:
+            print("\nMenu:")
+            print("1 - Uczenie z biasem (współczynnik uczenia = 0,6)")
+            print("2 - Uczenie bez biasu (współczynnik uczenia = 0,6)")
+            print("3 - Uczenie z różnymi kombinacjami")
+            print("4 - Wczytaj sieć z pliku i przetestuj")
+            print("6 - Wyjdź z zadania")
 
-        wybor = input("wybór: ")
+            wybor = input("wybór: ")
 
-        match wybor:
-            case "1":
-                print("\nUczenie z biasem (współczynnik uczenia = 0,6):")
+            match wybor:
+                case "1":
+                    print("\nUczenie z biasem:")
 
-                wagi_z_biasem, biasy_z_biasem, epoka_z_biasem, globalny_mse_z_biasem = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki_max, docelowy_blad, 0.6, 0.0, True, True, 10, "autoenkoder_z_biasem.txt")
+                    wagi, biasy, epoka, globalny_mse = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki, docelowy_blad, wspolczynnik_nauki, momentum, True, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu)
 
-                zapisz_model("model_autoenkoder_z_biasem.json", True, wagi_z_biasem, biasy_z_biasem)
-                print("Zapisano nauczoną sieć do pliku 'model_autoenkoder_z_biasem.json'")
+                    zapisz_model(nazwa_pliku_modelu, True, wagi, biasy)
+                    print("Zapisano nauczoną sieć do pliku '{nazwa_pliku_modelu}'")
 
-                print("Stan neuronów wyjściowych po nauce z biasem:")
-                for wejscie in dane_wejsciowe:
-                    aktywacje = propagacja_w_przod(wejscie, wagi_z_biasem, biasy_z_biasem, czy_bias=True)
-                    print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[1][0]:.4f}, {aktywacje[1][1]:.4f}, {aktywacje[1][2]:.4f}, {aktywacje[1][3]:.4f}]")
+                    print("Stan neuronów wyjściowych po nauce z biasem:")
+                    for wejscie in dane_wejsciowe:
+                        aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias=True)
+                        print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[1][0]:.4f}, {aktywacje[1][1]:.4f}, {aktywacje[1][2]:.4f}, {aktywacje[1][3]:.4f}]")
 
-                print("Stan neuronów ukrytych po nauce z biasem:")
-                for wejscie in dane_wejsciowe:
-                    aktywacje = propagacja_w_przod(wejscie, wagi_z_biasem, biasy_z_biasem, czy_bias=True)
-                    print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[0][0]:.4f}, {aktywacje[0][1]:.4f}]")
+                    print("Stan neuronów ukrytych po nauce z biasem:")
+                    for wejscie in dane_wejsciowe:
+                        aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias=True)
+                        print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[0][0]:.4f}, {aktywacje[0][1]:.4f}]")
 
-            case "2":
-                print("\nUczenie bez biasu (współczynnik uczenia = 0,6) \n")
+                case "2":
+                    print("\nUczenie bez biasu: \n")
 
-                wagi_bez_biasu, biasy_bez_biasu, epoka_bez_biasu, globalny_mse_bez_biasu = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki_max, docelowy_blad, 0.6, 0.0, False, True, 100, "autoenkoder_bez_biasu.txt")
+                    wagi, biasy, epoka, globalny_mse = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki, docelowy_blad, wspolczynnik_nauki, momentum, False, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu)
 
-                zapisz_model("model_autoenkoder_bez_biasu.json", False, wagi_bez_biasu, biasy_bez_biasu)
-                print("Zapisano nauczoną sieć do pliku 'model_autoenkoder_bez_biasu.json'")
+                    zapisz_model(nazwa_pliku_modelu, False, wagi, biasy)
+                    print("Zapisano nauczoną sieć do pliku '{nazwa_pliku_modelu}'")
 
-                print("Stan neuronów wyjściowych po nauce bez biasu:")
-                for wejscie in dane_wejsciowe:
-                    aktywacje = propagacja_w_przod(wejscie, wagi_bez_biasu, biasy_bez_biasu, czy_bias=False)
-                    print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[1][0]:.4f}, {aktywacje[1][1]:.4f}, {aktywacje[1][2]:.4f}, {aktywacje[1][3]:.4f}]")
+                    print("Stan neuronów wyjściowych po nauce bez biasu:")
+                    for wejscie in dane_wejsciowe:
+                        aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias=False)
+                        print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[1][0]:.4f}, {aktywacje[1][1]:.4f}, {aktywacje[1][2]:.4f}, {aktywacje[1][3]:.4f}]")
 
-                print("Stan neuronów ukrytych po nauce bez biasu:")
-                for wejscie in dane_wejsciowe:
-                    aktywacje = propagacja_w_przod(wejscie, wagi_bez_biasu, biasy_bez_biasu, czy_bias=False)
-                    print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[0][0]:.4f}, {aktywacje[0][1]:.4f}]")
+                    print("Stan neuronów ukrytych po nauce bez biasu:")
+                    for wejscie in dane_wejsciowe:
+                        aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias=False)
+                        print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[0][0]:.4f}, {aktywacje[0][1]:.4f}]")
 
-            case "3":
-                kombinacje = [(0.9, 0.0), (0.6, 0.0), (0.2, 0.0), (0.9, 0.6), (0.2, 0.9)]
+                case "3":
+                    kombinacje = [(0.9, 0.0), (0.6, 0.0), (0.2, 0.0), (0.9, 0.6), (0.2, 0.9)]
 
-                for wsp_nauk, momentum in kombinacje:
-                    print(f"\nTest kombinacji: Współczynnik nauki = {wsp_nauk}, Momentum = {momentum}")
-                    waga, bias, epoka, globalny_mse = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki_max, docelowy_blad, wsp_nauk, momentum, True, True, 100, f"autoenkoder_wsp_nauk{wsp_nauk}_momentum{momentum}.txt")
-                    print(f"Osiągnięto próg docelowego błędu przy epoce: {epoka}")
+                    for wsp_nauk, momentum in kombinacje:
+                        print(f"\nTest kombinacji: Współczynnik nauki = {wsp_nauk}, Momentum = {momentum}")
+                        wagi, biasy, epoka, globalny_mse = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki, docelowy_blad, wspolczynnik_nauki, momentum, True, losowa_kolejnosc, co_ile_zapis_log, f"autoenkoder_wsp_nauk{wsp_nauk}_momentum{momentum}.txt")
+                        print(f"Osiągnięto próg docelowego błędu przy epoce: {epoka}")
 
-            case "4":
-                nazwa_pliku = input("Podaj nazwę pliku z modelem: ")
-                wczytane_wagi, wczytane_biasy, czy_bias_wczytane = wczytaj_model(nazwa_pliku)
-                print("\nPomyślnie wczytano model. Testowanie na aktualnych wzorcach autoenkoder:")
-                for wejscie in dane_wejsciowe:
-                    aktywacje = propagacja_w_przod(wejscie, wczytane_wagi, wczytane_biasy, czy_bias=czy_bias_wczytane)
-                    print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[1][0]:.4f}, {aktywacje[1][1]:.4f}, {aktywacje[1][2]:.4f}, {aktywacje[1][3]:.4f}]")
+                case "4":
 
-                print("Stan neuronów ukrytych po nauce z biasem:")
-                for wejscie in dane_wejsciowe:
-                    aktywacje = propagacja_w_przod(wejscie, wczytane_wagi, wczytane_biasy, czy_bias=czy_bias_wczytane)
-                    print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[0][0]:.4f}, {aktywacje[0][1]:.4f}]")
+                    for wejscie in dane_wejsciowe:
+                        aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias)
+                        print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[1][0]:.4f}, {aktywacje[1][1]:.4f}, {aktywacje[1][2]:.4f}, {aktywacje[1][3]:.4f}]")
 
-            case "6":
-                break
+                    print("Stan neuronów ukrytych po nauce wczytanej z pliku:")
+                    for wejscie in dane_wejsciowe:
+                        aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias)
+                        print(f"Wejście: {wejscie} daje wyjście na : [{aktywacje[0][0]:.4f}, {aktywacje[0][1]:.4f}]")
 
-            case _:
-                print("Wybrałeś niepoprawną opcję")
+                case "6":
+                    break
+
+                case _:
+                    print("Wybrałeś niepoprawną opcję")

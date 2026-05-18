@@ -33,8 +33,9 @@ def siec_irysy():
         match wybor:
             case "1":
                 nazwa_pliku_modelu = input("Podaj nazwę pliku z modelem (np. model_irysy.json): ")
+                nazwa_pliku_logu = input("Podaj nazwę pliku do zapisu logu testowego (np. log_testowy_irysy.txt): ")
                 wagi, biasy, czy_bias = wczytaj_model(nazwa_pliku_modelu)
-                wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, "log_testowy_irysy.txt")
+                wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, nazwa_pliku_logu)
                 
                 poprawne = 0
                 for i in range(len(y_test)):
@@ -42,15 +43,15 @@ def siec_irysy():
                     przewidywany_wynik = wyniki_testu[i].index(max(wyniki_testu[i]))
                     if przewidywany_wynik == faktyczny_wynik:
                         poprawne += 1
-                print(f"Poprawnie sklasyfikowano {poprawne} z {len(y_test)} irysów.")
+                print(f"Poprawnie sklasyfikowano {poprawne} z {len(y_test)} irysów")
                 
             case "2":
-                rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu = wprowadzanie_danych_do_programu()
+                rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu, nazwa_pliku_modelu = wprowadzanie_danych_do_programu()
                 if losowa_kolejnosc:
                     random.shuffle(indeksy)
                 wagi, biasy = trenuj_siec(rozmiary_warstw, X_train, y_train, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu)
-                zapisz_model("model_irysy.json", czy_bias, wagi, biasy)
-                wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, "log_testowy_irysy.txt")
+                zapisz_model(nazwa_pliku_modelu, czy_bias, wagi, biasy)
+                wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, nazwa_pliku_logu)
                 
                 poprawne = 0
                 for i in range(len(y_test)):
@@ -58,7 +59,7 @@ def siec_irysy():
                     przewidywany_wynik = wyniki_testu[i].index(max(wyniki_testu[i]))
                     if przewidywany_wynik == faktyczny_wynik:
                         poprawne += 1
-                print(f"Poprawnie sklasyfikowano {poprawne} z {len(y_test)} irysów.")
+                print(f"Poprawnie sklasyfikowano {poprawne} z {len(y_test)} irysów")
             case "3":
                 break
                 
