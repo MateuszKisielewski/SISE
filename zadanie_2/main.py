@@ -8,7 +8,7 @@ def main():
         print("2 - Autoenkoder")
         print("3 - Zakończ")
 
-        wybor = input("\nWybór: \n")
+        wybor = input("\nWybór: ")
 
         match wybor:
             case "1":

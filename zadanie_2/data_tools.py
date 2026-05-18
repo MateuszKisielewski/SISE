@@ -68,3 +68,51 @@ def zapisz_log_testowy(nazwa_pliku, log, wzorzec_we, oczekiwane_wy, blad_wzorca,
             plik.write(f"Wagi: {wagi[i]}\n\n")
 
         plik.write("\n")
+
+def wprowadzanie_danych_do_programu ():
+    print("Wprowadź dane do programu:")
+
+    print("Podaj liczbę neuronów w wartwie wejściowej (np. 4): ")
+    liczba_neuronow_wejsciowych = int(input("Wybór: "))
+
+    print("Podaj liczbę neuronów w warstwie ukrytej (np. 5): ")
+    liczba_neuronow_ukrytych = int(input("Wybór: "))
+
+    print("Podaj liczbę neuronów w warstwie wyjściowej (np. 3): ")
+    liczba_neuronow_wyjsciowych = int(input("Wybór: "))
+
+    rozmiary_warstw = [liczba_neuronow_wejsciowych, liczba_neuronow_ukrytych, liczba_neuronow_wyjsciowych]
+
+    print("Podaj maksymalną liczbę epok (np. 2000): ")
+    epoki = int(input("Wybór: "))
+
+    print("Podaj docelowy błąd (np. 0.01): ")
+    docelowy_blad = float(input("Wybór: "))
+
+    print("Podaj współczynnik uczenia (np. 0.3): ")
+    wspolczynnik_nauki = float(input("Wybór: "))
+
+    print("Podaj momentum (np. 0.1): ") 
+    momentum = float(input("Wybór: "))
+
+    print("Czy używać biasu? (tak/nie): ")
+    czy_bias = input("Wybór: ")
+    if czy_bias == "tak":
+        czy_bias = True 
+    if czy_bias == "nie":    
+        czy_bias = False
+
+    print("Czy losować kolejność danych podczas nauki? (tak/nie): ")
+    losowa_kolejnosc = input("Wybór: ")
+    if losowa_kolejnosc == "tak":
+        losowa_kolejnosc = True
+    if losowa_kolejnosc == "nie":
+        losowa_kolejnosc = False
+
+    print("Podaj co ile epok zapisywać logi (np. 50): ")
+    co_ile_zapis_log = int(input("Wybór: "))
+
+    print("Podaj nazwę pliku do zapisu historii nauki (np. historia.txt): ")
+    nazwa_pliku_logu = input("Wybór: ")
+
+    return rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu

@@ -1,5 +1,5 @@
 import random
-from data_tools import wczytaj_plik_irysy, zapisz_model, wczytaj_model
+from data_tools import wczytaj_plik_irysy, zapisz_model, wczytaj_model, wprowadzanie_danych_do_programu
 from neural_network import trenuj_siec, testuj_siec
 
 def siec_irysy():
@@ -19,15 +19,6 @@ def siec_irysy():
     X_test = [dane_wejsciowe[i] for i in indeksy_testowe]
     y_test = [oczekiwane_wyjscia[i] for i in indeksy_testowe]
 
-    rozmiary_warstw = [4, 5, 3]
-    epoki = 1000
-    docelowy_blad = 0.01
-    wspolczynnik_nauki = 0.3
-    momentum = 0.0
-    czy_bias = True
-    losowa_kolejnosc = True
-    co_ile_zapis_log = 50
-    nazwa_pliku_logu = "historia_irysy.txt"
     wagi = None
     biasy = None
 
@@ -42,7 +33,7 @@ def siec_irysy():
         match wybor:
             case "1":
                 nazwa_pliku_modelu = input("Podaj nazwę pliku z modelem (np. model_irysy.json): ")
-                wagi, biasy = wczytaj_model(nazwa_pliku_modelu)
+                wagi, biasy, czy_bias = wczytaj_model(nazwa_pliku_modelu)
                 wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, "log_testowy_irysy.txt")
                 
                 poprawne = 0
@@ -54,6 +45,9 @@ def siec_irysy():
                 print(f"Poprawnie sklasyfikowano {poprawne} z {len(y_test)} irysów.")
                 
             case "2":
+                rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu = wprowadzanie_danych_do_programu()
+                if losowa_kolejnosc:
+                    random.shuffle(indeksy)
                 wagi, biasy = trenuj_siec(rozmiary_warstw, X_train, y_train, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu)
                 zapisz_model("model_irysy.json", czy_bias, wagi, biasy)
                 wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, "log_testowy_irysy.txt")
