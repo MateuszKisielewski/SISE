@@ -71,3 +71,6 @@ def siec_irysy():
                 
             case _:
                 print("Wybrałeś niepoprawną opcję")
+
+if __name__ == "__main__":  
+    siec_irysy()

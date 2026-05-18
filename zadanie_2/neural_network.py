@@ -1,7 +1,7 @@
 import random
 
-from zadanie_2.data_tools import zapisz_historie_nauki, zapisz_log_testowy
-from zadanie_2.formulas import propagacja_w_przod, blad_pojedynczego_wzorca, propagacja_wsteczna, blad_globalny_mse
+from data_tools import zapisz_historie_nauki, zapisz_log_testowy
+from formulas import propagacja_w_przod, blad_pojedynczego_wzorca, propagacja_wsteczna, blad_globalny_mse
 
 
 def inicjalizuj_siec(rozmiary_warstw, czy_bias):

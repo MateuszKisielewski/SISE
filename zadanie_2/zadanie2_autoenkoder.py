@@ -1,7 +1,7 @@
 import json
-from zadanie_2.formulas import propagacja_w_przod
-from zadanie_2.neural_network import trenuj_siec
-from zadanie_2.data_tools import zapisz_model, wczytaj_model
+from formulas import propagacja_w_przod
+from neural_network import trenuj_siec
+from data_tools import zapisz_model, wczytaj_model
 
 
 def siec_autoenkoder():
