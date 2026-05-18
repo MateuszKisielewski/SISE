@@ -41,7 +41,9 @@ def siec_irysy():
                 wagi, biasy, czy_bias = wczytaj_model(nazwa_pliku_modelu)
                 wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, nazwa_pliku_logu)
                 
-                macierz_pomylek = [[0, 0, 0] for _ in range(3)]
+                macierz_pomylek = []
+                for i in range(3):
+                    macierz_pomylek.append([0, 0, 0])
                 nazwy_klas = ["Setosa", "Versicolor", "Virginica"]
                 poprawne = 0
 
@@ -59,16 +61,24 @@ def siec_irysy():
                 print(f"Dokładność: {dokladnosc:.2f}%")
                 
                 print("\nSkuteczność w rozbiciu na klasy")
-                for c in range(3):
-                    tp = macierz_pomylek[c][c]
-                    fp = sum(macierz_pomylek[r][c] for r in range(3) if r != c)
-                    fn = sum(macierz_pomylek[c][p] for p in range(3) if p != c)
+                for gatunek in range(3):
+                    prawdziwie_pozytywne = macierz_pomylek[gatunek][gatunek]
+                    
+                    falszywie_pozytywne = 0
+                    for wiersz in range(3):
+                        if wiersz != gatunek:
+                            falszywie_pozytywne += macierz_pomylek[wiersz][gatunek]
+                            
+                    falszywie_negatywne = 0
+                    for kolumna in range(3):
+                        if kolumna != gatunek:
+                            falszywie_negatywne += macierz_pomylek[gatunek][kolumna]
 
-                    precyzja = oblicz_precyzje(tp, fp)
-                    czulosc = oblicz_czulosc(tp, fn)
+                    precyzja = oblicz_precyzje(prawdziwie_pozytywne, falszywie_pozytywne)
+                    czulosc = oblicz_czulosc(prawdziwie_pozytywne, falszywie_negatywne)
                     f1 = oblicz_f1_score(precyzja, czulosc)
 
-                    print(f"Klasa {nazwy_klas[c]}: TP = {tp}, Precision = {precyzja:.2f}, Recall = {czulosc:.2f}, F1 = {f1:.2f}")
+                    print(f"Klasa {nazwy_klas[gatunek]}: Prawdziwie Pozytywne = {prawdziwie_pozytywne}, Precyzja = {precyzja:.2f}, Czułość = {czulosc:.2f}, F1 = {f1:.2f}")
 
                 print("\nMacierz pomyłek")
                 df_macierz = pd.DataFrame(macierz_pomylek, index=nazwy_klas, columns=nazwy_klas)
@@ -85,7 +95,9 @@ def siec_irysy():
                 zapisz_model(nazwa_pliku_modelu, czy_bias, wagi, biasy)
                 wyniki_testu = testuj_siec(X_test, y_test, wagi, biasy, czy_bias, nazwa_pliku_logu)
                 
-                macierz_pomylek = [[0, 0, 0] for _ in range(3)]
+                macierz_pomylek = []
+                for i in range(3):
+                    macierz_pomylek.append([0, 0, 0])
                 nazwy_klas = ["Setosa", "Versicolor", "Virginica"]
                 poprawne = 0
 
@@ -103,16 +115,24 @@ def siec_irysy():
                 print(f"Dokładność: {dokladnosc:.2f}%")
                 
                 print("\nSkuteczność w rozbiciu na klasy")
-                for c in range(3):
-                    tp = macierz_pomylek[c][c]
-                    fp = sum(macierz_pomylek[r][c] for r in range(3) if r != c)
-                    fn = sum(macierz_pomylek[c][p] for p in range(3) if p != c)
+                for gatunek in range(3):
+                    prawdziwie_pozytywne = macierz_pomylek[gatunek][gatunek]
+                    
+                    falszywie_pozytywne = 0
+                    for wiersz in range(3):
+                        if wiersz != gatunek:
+                            falszywie_pozytywne += macierz_pomylek[wiersz][gatunek]
+                            
+                    falszywie_negatywne = 0
+                    for kolumna in range(3):
+                        if kolumna != gatunek:
+                            falszywie_negatywne += macierz_pomylek[gatunek][kolumna]
 
-                    precyzja = oblicz_precyzje(tp, fp)
-                    czulosc = oblicz_czulosc(tp, fn)
+                    precyzja = oblicz_precyzje(prawdziwie_pozytywne, falszywie_pozytywne)
+                    czulosc = oblicz_czulosc(prawdziwie_pozytywne, falszywie_negatywne)
                     f1 = oblicz_f1_score(precyzja, czulosc)
 
-                    print(f"Klasa {nazwy_klas[c]}: TP = {tp}, Precision = {precyzja:.2f}, Recall = {czulosc:.2f}, F1 = {f1:.2f}")
+                    print(f"Klasa {nazwy_klas[gatunek]}: Prawdziwie Pozytywne = {prawdziwie_pozytywne}, Precyzja = {precyzja:.2f}, Czułość = {czulosc:.2f}, F1 = {f1:.2f}")
 
                 print("\nMacierz pomyłek")
                 df_macierz = pd.DataFrame(macierz_pomylek, index=nazwy_klas, columns=nazwy_klas)
