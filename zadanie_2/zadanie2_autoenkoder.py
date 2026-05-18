@@ -3,7 +3,7 @@ from neural_network import trenuj_siec
 from data_tools import zapisz_model, wczytaj_model, wczytaj_plik_autoenkoder, wprowadzanie_danych_do_programu
 
 def siec_autoenkoder():
-    print("Podaj nazwe pliku z danymi wejściowymi (np. dane_autoenkoder.csv): ")
+    print("Podaj nazwe pliku z danymi wejściowymi (np. autoenkoder.csv): ")
     nazwa_pliku = input("nazwa pliku: ")
     dane_wejsciowe, oczekiwane_wyjsciowe = wczytaj_plik_autoenkoder(nazwa_pliku)
     pomin_petle = False

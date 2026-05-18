@@ -47,6 +47,10 @@ def inicjalizuj_siec(rozmiary_warstw, czy_bias):
 
 def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu):
 
+    if rozmiary_warstw[-1] != len(oczekiwane_wyjscia[0]):
+        print("Błąd: Liczba neuronów wyjściowych nie zgadza się z rozmiarem wektora odpowiedzi. Ponownie uruchom program i podaj poprawne dane")
+        return
+
     wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = inicjalizuj_siec(rozmiary_warstw, czy_bias)
     historia_bledow = []
 
