@@ -11,7 +11,7 @@ def siec_autoenkoder():
     wagi = None
     biasy = None
     czy_bias = None
-    rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum = None, None, None, None, None
+    rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias_input = None, None, None, None, None, None
     losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu, nazwa_pliku_modelu = None, None, "domyslny_log.txt", "domyslny_model.json"
 
     czy_wczytywanie_sieci_z_pliku = input("Czy chcesz wczytać sieć z pliku? (tak/nie): ").lower()
@@ -91,7 +91,7 @@ def siec_autoenkoder():
 
                     for wsp_nauk, momentum_kombinacji in kombinacje:
                         print(f"\nTest kombinacji: Współczynnik nauki = {wsp_nauk}, Momentum = {momentum_kombinacji}")
-                        wagi_temp, biasy_temp, epoka, globalny_mse = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki, docelowy_blad, wsp_nauk, momentum_kombinacji, True, losowa_kolejnosc, co_ile_zapis_log, f"autoenkoder_wsp_nauk{wsp_nauk}_momentum{momentum_kombinacji}.txt")
+                        wagi_temp, biasy_temp, epoka, globalny_mse = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki, docelowy_blad, wsp_nauk, momentum_kombinacji, czy_bias_input, losowa_kolejnosc, co_ile_zapis_log, f"autoenkoder_wsp_nauk{wsp_nauk}_momentum{momentum_kombinacji}.txt")
                         print(f"Osiągnięto próg docelowego błędu przy epoce: {epoka}")
 
                 case "4":
