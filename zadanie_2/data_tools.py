@@ -79,16 +79,13 @@ def zapisz_log_testowy(nazwa_pliku, log, wzorzec_we, oczekiwane_wy, blad_wzorca,
 def wprowadzanie_danych_do_programu ():
     print("Wprowadź dane do programu:")
 
-    print("Podaj liczbę neuronów w wartwie wejściowej (np. 4): ")
-    liczba_neuronow_wejsciowych = int(input("Wybór: "))
-
-    print("Podaj liczbę neuronów w warstwie ukrytej (np. 5): ")
-    liczba_neuronow_ukrytych = int(input("Wybór: "))
-
-    print("Podaj liczbę neuronów w warstwie wyjściowej (np. 3): ")
-    liczba_neuronow_wyjsciowych = int(input("Wybór: "))
-
-    rozmiary_warstw = [liczba_neuronow_wejsciowych, liczba_neuronow_ukrytych, liczba_neuronow_wyjsciowych]
+    rozmiary_warstw = []
+    rozmiary_warstw.append(int(input("Liczba neuronów na wejściu: ")))
+    liczba_warstw_ukrytych = int(input("Podaj liczbę warstw ukrytych: "))
+    for i in range(liczba_warstw_ukrytych):
+        neurony_ukryte = int(input(f"Podaj liczbę neuronów w warstwie ukrytej nr {i+1}: "))
+        rozmiary_warstw.append(neurony_ukryte)
+    rozmiary_warstw.append(int(input("Liczba neuronów na wyjściu: ")))
 
     print("Podaj maksymalną liczbę epok (np. 2000): ")
     epoki = int(input("Wybór: "))
