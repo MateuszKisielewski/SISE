@@ -6,6 +6,5 @@
 .pycharm*
 __pycache__
 .vscode
-.txt
-*.txt
+.zadanie_1/
 *.Sol
