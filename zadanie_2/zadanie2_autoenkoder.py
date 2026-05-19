@@ -50,6 +50,8 @@ def siec_autoenkoder():
                     zapisz_model(nazwa_pliku_modelu, czy_bias, wagi, biasy)
                     print(f"Zapisano nauczoną sieć do pliku '{nazwa_pliku_modelu}'")
 
+                    print("Osiągnięto próg docelowego błędu przy epoce: {epoka}, globalny MSE: {globalny_mse:.6f}")
+
                     print("Stan neuronów wyjściowych po nauce z biasem:")
                     for wejscie in dane_wejsciowe:
                         aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias)
@@ -71,6 +73,8 @@ def siec_autoenkoder():
 
                     zapisz_model(nazwa_pliku_modelu, czy_bias, wagi, biasy)
                     print(f"Zapisano nauczoną sieć do pliku '{nazwa_pliku_modelu}'")
+
+                    print(f"Osiągnięto próg docelowego błędu przy epoce: {epoka}, globalny MSE: {globalny_mse:.6f}")
 
                     print("Stan neuronów wyjściowych po nauce bez biasu:")
                     for wejscie in dane_wejsciowe:
