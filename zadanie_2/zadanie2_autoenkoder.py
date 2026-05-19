@@ -98,6 +98,7 @@ def siec_autoenkoder():
                     for wsp_nauk, momentum_kombinacji in kombinacje:
                         print(f"\nTest kombinacji: Współczynnik nauki = {wsp_nauk}, Momentum = {momentum_kombinacji}")
                         wagi_temp, biasy_temp, epoka, globalny_mse = trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjsciowe, epoki, docelowy_blad, wsp_nauk, momentum_kombinacji, czy_bias_input, losowa_kolejnosc, co_ile_zapis_log, f"autoenkoder_wsp_nauk{wsp_nauk}_momentum{momentum_kombinacji}.txt")
+                        rzeczywiste_wyjscie = testuj_siec(dane_wejsciowe, oczekiwane_wyjsciowe, wagi, biasy, czy_bias, f"autoenkoder_wsp_nauk{wsp_nauk}_momentum{momentum_kombinacji}.txt")
                         zapisz_model(f"model_autoenkoder_wsp_nauk{wsp_nauk}_momentum{momentum_kombinacji}.json", czy_bias_input, wagi_temp, biasy_temp)
                         print(f"Osiągnięto próg docelowego błędu przy epoce: {epoka}")
 
