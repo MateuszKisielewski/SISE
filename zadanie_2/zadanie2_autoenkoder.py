@@ -1,5 +1,5 @@
 from formulas import propagacja_w_przod
-from neural_network import trenuj_siec
+from neural_network import trenuj_siec, testuj_siec
 from data_tools import zapisz_model, wczytaj_model, wczytaj_plik_autoenkoder, wprowadzanie_danych_do_programu
 
 def siec_autoenkoder():
@@ -50,7 +50,8 @@ def siec_autoenkoder():
                     zapisz_model(nazwa_pliku_modelu, czy_bias, wagi, biasy)
                     print(f"Zapisano nauczoną sieć do pliku '{nazwa_pliku_modelu}'")
 
-                    print("Osiągnięto próg docelowego błędu przy epoce: {epoka}, globalny MSE: {globalny_mse:.6f}")
+                    print(f"Osiągnięto próg docelowego błędu przy epoce: {epoka}, globalny MSE: {globalny_mse:.6f}")
+                    rzeczywiste_wyjscie = testuj_siec(dane_wejsciowe, oczekiwane_wyjsciowe, wagi, biasy, czy_bias, nazwa_pliku_logu)
 
                     print("Stan neuronów wyjściowych po nauce z biasem:")
                     for wejscie in dane_wejsciowe:
@@ -75,6 +76,7 @@ def siec_autoenkoder():
                     print(f"Zapisano nauczoną sieć do pliku '{nazwa_pliku_modelu}'")
 
                     print(f"Osiągnięto próg docelowego błędu przy epoce: {epoka}, globalny MSE: {globalny_mse:.6f}")
+                    rzeczywiste_wyjscie = testuj_siec(dane_wejsciowe, oczekiwane_wyjsciowe, wagi, biasy, czy_bias, nazwa_pliku_logu)
 
                     print("Stan neuronów wyjściowych po nauce bez biasu:")
                     for wejscie in dane_wejsciowe:
@@ -102,7 +104,10 @@ def siec_autoenkoder():
                 case "4":
                     if wagi is None:
                         print("\nBłąd: Najpierw wytrenuj sieć (opcja 1, 2 lub 3) albo wczytaj z pliku podczas startu")
+
                     else:
+                        rzeczywiste_wyjscie = testuj_siec(dane_wejsciowe, oczekiwane_wyjsciowe, wagi, biasy, czy_bias, nazwa_pliku_logu)
+
                         print("\nStan neuronów wyjściowych aktualnego modelu:")
                         for wejscie in dane_wejsciowe:
                             aktywacje = propagacja_w_przod(wejscie, wagi, biasy, czy_bias)
@@ -115,6 +120,7 @@ def siec_autoenkoder():
 
                 case "5":
                     nazwa_pliku_modelu = input("Podaj nową nazwę pliku modelu: ")
+                    wczytaj_model(nazwa_pliku_modelu)
                     nazwa_pliku_logu = input("Podaj nową nazwę pliku logu: ")
                     print(f"Zmieniono nazwę pliku modelu na '{nazwa_pliku_modelu}' i pliku logu na '{nazwa_pliku_logu}'")
                 
