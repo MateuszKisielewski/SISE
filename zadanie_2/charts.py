@@ -13,7 +13,6 @@ def rysuj_wykres_mse(plik_wejsciowy, plik_wyjsciowy):
         czyste_dane.append(linia.strip())
         
     dane_jako_tekst = '\n'.join(czyste_dane)
-    
     df = pd.read_csv(io.StringIO(dane_jako_tekst), sep=r'\s*,\s*', engine='python')
 
     plt.figure(figsize=(10, 6))

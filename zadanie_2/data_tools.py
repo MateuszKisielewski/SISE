@@ -1,63 +1,31 @@
 import json
-
 import pandas as pd
 
-def wczytaj_plik_irysy (plik_csv):
-    df = pd.read_csv(plik_csv, header=None, sep=',')
-    dane_wejsciowe = df.iloc[:,0:4].values.tolist()
-    etykiety = df.iloc[:,4].values.tolist()
-
-    oczekiwane_dane_wyjsciowe = []
-    for etykieta in etykiety:
-        if etykieta == "setosa":
-            oczekiwane_dane_wyjsciowe.append([1,0,0])
-        if etykieta == "versicolor":
-            oczekiwane_dane_wyjsciowe.append([0,1,0])
-        if etykieta == "virginica":
-            oczekiwane_dane_wyjsciowe.append([0,0,1])
-
-    return dane_wejsciowe, oczekiwane_dane_wyjsciowe
-
-def wczytaj_plik_autoenkoder(plik_csv):
-    df = pd.read_csv(plik_csv, header=None, sep=',')
-    dane_wejsciowe = df.iloc[:,0:4].values.tolist()
-    oczekiwane_dane_wyjsciowe = df.iloc[:,4:8].values.tolist()
-
-    return dane_wejsciowe, oczekiwane_dane_wyjsciowe
-
 def zapisz_model(nazwa_pliku, czy_bias, wagi, biasy):
-    stan_sieci = {
+    model = {
         "czy_bias": czy_bias,
         "wagi": wagi,
         "biasy": biasy
     }
-
-    with open(nazwa_pliku, 'w') as plik:
-        json.dump(stan_sieci, plik, indent=4)
-
+    with open(nazwa_pliku, 'w') as f:
+        json.dump(model, f, indent=4)
+    print(f"Zapisano model do pliku: '{nazwa_pliku}'")
 
 def wczytaj_model(nazwa_pliku):
-    with open(nazwa_pliku, 'r') as plik:
-        stan_sieci = json.load(plik)
-
-    czy_bias = stan_sieci["czy_bias"]
-    wagi = stan_sieci["wagi"]
-    biasy = stan_sieci["biasy"]
-
-    return wagi, biasy, czy_bias
-
+    with open(nazwa_pliku, 'r') as f:
+        model = json.load(f)
+    return model["czy_bias"], model["wagi"], model["biasy"]
 
 def zapisz_historie_nauki(nazwa_pliku, historia_bledow):
-    with open(nazwa_pliku, 'w') as plik:
-        plik.write("Epoka , blad_glowny \n")
-
-        for dane in historia_bledow:
-            epoka = dane[0]
-            blad = dane[1]
-            plik.write(f"{epoka} , {blad}\n")
-
+    with open(nazwa_pliku, 'w') as f:
+        f.write("Epoka , blad_glowny \n")
+        for log in historia_bledow:
+            f.write(f"{log[0]} , {log[1]}\n")
+    print(f"Zapisano historię błędu do pliku: '{nazwa_pliku}'")
 
 def zapisz_log_testowy(nazwa_pliku, log, wzorzec_we, oczekiwane_wy, blad_wzorca, bledy_wyjsciowe, wartosci_wyjsciowe_warstw, wagi):
+    if nazwa_pliku is None:
+        return
 
     with open(nazwa_pliku, 'a') as plik:
         plik.write(f"Log: {log}\n")
@@ -75,51 +43,3 @@ def zapisz_log_testowy(nazwa_pliku, log, wzorzec_we, oczekiwane_wy, blad_wzorca,
             plik.write(f"Wagi: {wagi[i]}\n\n")
 
         plik.write("\n")
-
-def wprowadzanie_danych_do_programu ():
-    print("Wprowadź dane do programu:")
-
-    rozmiary_warstw = []
-    rozmiary_warstw.append(int(input("Liczba neuronów na wejściu: ")))
-    liczba_warstw_ukrytych = int(input("Podaj liczbę warstw ukrytych: "))
-    for i in range(liczba_warstw_ukrytych):
-        neurony_ukryte = int(input(f"Podaj liczbę neuronów w warstwie ukrytej nr {i+1}: "))
-        rozmiary_warstw.append(neurony_ukryte)
-    rozmiary_warstw.append(int(input("Liczba neuronów na wyjściu: ")))
-
-    print("Podaj maksymalną liczbę epok (np. 2000): ")
-    epoki = int(input("Wybór: "))
-
-    print("Podaj docelowy błąd (np. 0.01): ")
-    docelowy_blad = float(input("Wybór: "))
-
-    print("Podaj współczynnik uczenia (np. 0.3): ")
-    wspolczynnik_nauki = float(input("Wybór: "))
-
-    print("Podaj momentum (np. 0.1): ") 
-    momentum = float(input("Wybór: "))
-
-    print("Czy używać biasu? (tak/nie): ")
-    czy_bias = input("Wybór: ").lower()
-    if czy_bias == "tak":
-        czy_bias = True 
-    if czy_bias == "nie":    
-        czy_bias = False
-
-    print("Czy losować kolejność danych podczas nauki? (tak/nie): ")
-    losowa_kolejnosc = input("Wybór: ").lower()
-    if losowa_kolejnosc == "tak":
-        losowa_kolejnosc = True
-    if losowa_kolejnosc == "nie":
-        losowa_kolejnosc = False
-
-    print("Podaj co ile epok zapisywać logi (np. 50): ")
-    co_ile_zapis_log = int(input("Wybór: "))
-
-    print("Podaj nazwę pliku do zapisu historii nauki (np. historia.txt): ")
-    nazwa_pliku_logu = input("Wybór: ")
-
-    print("Podaj nazwę pliku do zapisu modelu (np. model.json): ")
-    nazwa_pliku_modelu = input("Wybór: ")
-
-    return rozmiary_warstw, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu, nazwa_pliku_modelu
