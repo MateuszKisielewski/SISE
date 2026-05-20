@@ -52,8 +52,11 @@ def wczytaj_dane_uniwersalne(plik_csv, n_wejsc, n_wyjsc):
 
 def oblicz_macierz_pomylek(oczekiwane_wyjscia, rzeczywiste_wyjscia, liczba_klas):
     macierz = []
+
     for wiersz in range(liczba_klas):
-        pusty_wiersz = [0] * liczba_klas
+        pusty_wiersz = []
+        for kolumna in range(liczba_klas):
+            pusty_wiersz.append(0)
         macierz.append(pusty_wiersz)
 
     poprawne_trafienia = 0
@@ -238,9 +241,9 @@ def tryb_trenuj():
 def main():
     if len(sys.argv) < 2:
         print("Użycie:")
-        print("trenuj:  python main.py trenuj_pelny|trenuj_podzial <csv> <warstwy> <epoki> <cel_MSE> <wsp_nauki> <momentum> <bias: 0|1> <losowa_kolejnosc: 0|1> <co_ile_epok> <log.txt> <model.json>")
-        print("testuj:  python main.py testuj <csv> <model.json> <log.txt>")
-        print("wykres:  python main.py wykres <log.txt> <wykres.png>")
+        print("trenuj: python main.py trenuj_pelny|trenuj_podzial <csv> <warstwy> <epoki> <cel_MSE> <wsp_nauki> <momentum> <bias: 0|1> <losowa_kolejnosc: 0|1> <co_ile_epok> <log.txt> <model.json>")
+        print("testuj: python main.py testuj <csv> <model.json> <log.txt>")
+        print("wykres: python main.py wykres <log.txt> <wykres.png>")
         sys.exit(1)
 
     komenda = sys.argv[1]
