@@ -1,5 +1,4 @@
 import sys
-import time
 import random
 import pandas as pd
 from data_tools import zapisz_model, wczytaj_model
@@ -51,96 +50,124 @@ def wczytaj_dane_uniwersalne(plik_csv, n_wejsc, n_wyjsc):
             
     return x, y, nazwy_klas
 
+def oblicz_macierz_pomylek(oczekiwane_wyjscia, rzeczywiste_wyjscia, liczba_klas):
+    macierz = []
+    for wiersz in range(liczba_klas):
+        pusty_wiersz = [0] * liczba_klas
+        macierz.append(pusty_wiersz)
 
-# ---------------------------------------------------------------------------
-# Wyświetlanie wyników klasyfikacji
-# ---------------------------------------------------------------------------
+    poprawne_trafienia = 0
 
-def wyswietl_macierz_i_metryki(y_true, y_pred, nazwy_klas, n_wyjsc):
-    macierz = [[0] * n_wyjsc for _ in range(n_wyjsc)]
-    poprawne = 0
+    for i in range(len(oczekiwane_wyjscia)):
+        
+        wektor_oczekiwany = oczekiwane_wyjscia[i]
+        wektor_rzeczywisty = rzeczywiste_wyjscia[i]
 
-    for i in range(len(y_true)):
-        idx_oczekiwana = y_true[i].index(max(y_true[i]))
-        idx_rzeczywista = y_pred[i].index(max(y_pred[i]))
-        macierz[idx_oczekiwana][idx_rzeczywista] += 1
-        if idx_oczekiwana == idx_rzeczywista:
-            poprawne += 1
+        najwieksza_wartosc_oczekiwana = max(wektor_oczekiwany)
+        indeks_oczekiwany = wektor_oczekiwany.index(najwieksza_wartosc_oczekiwana)
 
-    return macierz, poprawne
+        najwieksza_wartosc_rzeczywista = max(wektor_rzeczywisty)
+        indeks_rzeczywisty = wektor_rzeczywisty.index(najwieksza_wartosc_rzeczywista)
 
+        macierz[indeks_oczekiwany][indeks_rzeczywisty] += 1
 
-def drukuj_metryki(macierz, nazwy_klas, n_wyjsc, poprawne, n_prob):
-    print(f"Skuteczność: {(poprawne / n_prob) * 100:.2f}% ({poprawne}/{n_prob})\n")
-    for g in range(n_wyjsc):
-        tp = macierz[g][g]
-        fp = sum(macierz[w][g] for w in range(n_wyjsc) if w != g)
-        fn = sum(macierz[g][k] for k in range(n_wyjsc) if k != g)
-        prec = oblicz_precyzje(tp, fp)
-        rec  = oblicz_czulosc(tp, fn)
-        f1   = oblicz_f1_score(prec, rec)
-        print(f"  Klasa {nazwy_klas[g]}: Precyzja = {prec:.2f}, Czułość = {rec:.2f}, F1 = {f1:.2f}")
+        if indeks_oczekiwany == indeks_rzeczywisty:
+            poprawne_trafienia += 1
 
-    print("\nMacierz pomyłek:")
-    print(pd.DataFrame(macierz, index=nazwy_klas, columns=nazwy_klas))
+    return macierz, poprawne_trafienia
 
+def wypisz_metryki_dokladnosci(macierz, nazwy_klas, liczba_klas, poprawne_trafienia, liczba_wszystkich_probek):
+    skutecznosc = (poprawne_trafienia / liczba_wszystkich_probek) * 100
+    print(f"Ogólna skuteczność: {skutecznosc:.2f}%\n")
 
-# ---------------------------------------------------------------------------
-# Tryb: wykres
-# ---------------------------------------------------------------------------
+    for indeks_klasy in range(liczba_klas):
+        nazwa_obecnej_klasy = nazwy_klas[indeks_klasy]
+        prawdziwie_pozytywne = macierz[indeks_klasy][indeks_klasy]
+    
+        falszywie_pozytywne = 0
+        for wiersz in range(liczba_klas):
+            if wiersz != indeks_klasy:
+                falszywie_pozytywne += macierz[wiersz][indeks_klasy]
+                
+        falszywie_negatywne = 0
+        for kolumna in range(liczba_klas):
+            if kolumna != indeks_klasy:
+                falszywie_negatywne += macierz[indeks_klasy][kolumna]
+                
+        precyzja = oblicz_precyzje(prawdziwie_pozytywne, falszywie_pozytywne)
+        czulosc = oblicz_czulosc(prawdziwie_pozytywne, falszywie_negatywne)
+        f1 = oblicz_f1_score(precyzja, czulosc)
+        
+        print(f"Klasa {nazwa_obecnej_klasy}:")
+        print(f"Precyzja: {precyzja:.2f}")
+        print(f"Czułość: {czulosc:.2f}")
+        print(f"F1 Score: {f1:.2f}\n")
+
+    print("Macierz pomyłek:")
+    ramka_macierzy = pd.DataFrame(macierz, index=nazwy_klas, columns=nazwy_klas)
+    print(ramka_macierzy)
 
 def tryb_wykres():
     rysuj_wykres_mse(sys.argv[2], sys.argv[3])
 
-
-# ---------------------------------------------------------------------------
-# Tryb: testuj
-# ---------------------------------------------------------------------------
-
 def tryb_testuj():
     plik_wejsciowy = sys.argv[2]
-    plik_modelu    = sys.argv[3]
-    plik_logu      = sys.argv[4] if len(sys.argv) >= 5 else None
+    plik_modelu = sys.argv[3]
+
+    if len(sys.argv) >= 5:
+        plik_logu = sys.argv[4]
+    else:
+        plik_logu = None
 
     czy_bias, wagi, biasy = wczytaj_model(plik_modelu)
     n_wejsc = len(wagi[0][0])
     n_wyjsc = len(wagi[-1])
 
-    X, y, nazwy_klas = wczytaj_dane_uniwersalne(plik_wejsciowy, n_wejsc, n_wyjsc)
-    rzeczywiste_wyjscia = testuj_siec(X, y, wagi, biasy, czy_bias, plik_logu)
+    x, y, nazwy_klas = wczytaj_dane_uniwersalne(plik_wejsciowy, n_wejsc, n_wyjsc)
+    rzeczywiste_wyjscia = testuj_siec(x, y, wagi, biasy, czy_bias, plik_logu)
 
-    print("\n--- REZULTATY TESTOWANIA MODELU ---")
+    dane_z_pliku = pd.read_csv(plik_wejsciowy, header=None)
+    kolumna_etykiet = dane_z_pliku.iloc[:, n_wejsc].values
 
-    kolumna_etykiet = pd.read_csv(plik_wejsciowy, header=None).iloc[:, n_wejsc].values
-    klasyfikacja = n_wyjsc > 1 and any(isinstance(v, str) for v in kolumna_etykiet)
-
-    if klasyfikacja:
-        macierz, poprawne = wyswietl_macierz_i_metryki(y, rzeczywiste_wyjscia, nazwy_klas, n_wyjsc)
-        print(f"Ogólna skuteczność klasyfikacji: ", end="")
-        drukuj_metryki(macierz, nazwy_klas, n_wyjsc, poprawne, len(X))
+    czy_zawiera_tekst = False
+    for wartosc in kolumna_etykiet:
+        if isinstance(wartosc, str):
+            czy_zawiera_tekst = True
+            break
+    
+    if n_wyjsc > 1 and czy_zawiera_tekst == True:
+        macierz, poprawne = oblicz_macierz_pomylek(y, rzeczywiste_wyjscia, n_wyjsc)
+        print("Ogólna skuteczność klasyfikacji: ")
+        wypisz_metryki_dokladnosci(macierz, nazwy_klas, n_wyjsc, poprawne, len(x))
+        
     else:
-        for i in range(len(X)):
-            wyjscie = [round(v, 4) for v in rzeczywiste_wyjscia[i]]
-            print(f"  Wejście: {X[i]} -> Wyjście: {wyjscie} (Oczekiwane: {y[i]})")
+        liczba_probek = len(x)
+        for i in range(liczba_probek):
+            
+            wyjscie_zaokraglone = []
+            for wartosc in rzeczywiste_wyjscia[i]:
+                zaokraglona_liczba = round(wartosc, 4)
+                wyjscie_zaokraglone.append(zaokraglona_liczba)
+                
+            print(f"Wejście: {x[i]} daje Wyjście: {wyjscie_zaokraglone} (Oczekiwane: {y[i]})")
 
 def tryb_trenuj():
-    komenda       = sys.argv[1]
-    plik_wejsc    = sys.argv[2]
+    komenda = sys.argv[1]
+    plik_wejsc = sys.argv[2]
     struktura_str = sys.argv[3]
-    epoki         = int(sys.argv[4])
+    epoki = int(sys.argv[4])
     docelowy_blad = float(sys.argv[5])
-    wsp_nauki     = float(sys.argv[6])
-    momentum      = float(sys.argv[7])
-    czy_bias      = bool(int(sys.argv[8]))
-    losowa_kol    = bool(int(sys.argv[9]))
-    co_ile_epok   = int(sys.argv[10])
-    plik_logu     = sys.argv[11]
-    plik_modelu   = sys.argv[12]
+    wsp_nauki = float(sys.argv[6])
+    momentum = float(sys.argv[7])
+    czy_bias= bool(int(sys.argv[8]))
+    losowa_kol = bool(int(sys.argv[9]))
+    co_ile_epok = int(sys.argv[10])
+    plik_logu = sys.argv[11]
+    plik_modelu = sys.argv[12]
 
-    lista_tekstowa = struktura_str.split('-')
-
+    lista_struktury = struktura_str.split('-')
     rozmiary_warstw = []
-    for element in lista_tekstowa:
+    for element in lista_struktury:
         liczba = int(element)
         rozmiary_warstw.append(liczba)
 
@@ -149,48 +176,64 @@ def tryb_trenuj():
 
     x, y, nazwy_klas = wczytaj_dane_uniwersalne(plik_wejsc, n_wejsc, n_wyjsc)
 
-    if komenda == "trenuj_podzial":
-        indeksy = list(range(len(x)))
-        random.shuffle(indeksy)
-        prog = int(len(x) * 0.7)
-        x_train = [x[i] for i in indeksy[:prog]]
-        y_train = [y[i] for i in indeksy[:prog]]
-        x_test  = [x[i] for i in indeksy[prog:]]
-        y_test  = [y[i] for i in indeksy[prog:]]
-    else:
-        x_train, y_train = x, y
-        x_test,  y_test  = x, y
+    x_train = []
+    y_train = []
+    x_test  = []
+    y_test  = []
 
-    poczatek = time.perf_counter()
-    wagi, biasy, epoka, blad = trenuj_siec(
-        rozmiary_warstw, x_train, y_train,
-        epoki, docelowy_blad, wsp_nauki, momentum,
-        czy_bias, losowa_kol, co_ile_epok, plik_logu
-    )
-    koniec = time.perf_counter()
+    if komenda == "trenuj_podzial":
+        liczba_wszystkich_probek = len(x)
+        
+        indeksy = list(range(liczba_wszystkich_probek))
+        random.shuffle(indeksy)
+        prog_podzialu = int(liczba_wszystkich_probek * 0.7)
+        
+        for i in range(liczba_wszystkich_probek):
+            wylosowany_indeks = indeksy[i]
+            
+            if i < prog_podzialu:
+                x_train.append(x[wylosowany_indeks])
+                y_train.append(y[wylosowany_indeks])
+            else:
+                x_test.append(x[wylosowany_indeks])
+                y_test.append(y[wylosowany_indeks])
+                
+    else:
+        x_train = x
+        y_train = y
+        x_test  = x
+        y_test  = y
+
+    wagi, biasy, epoka, blad = trenuj_siec(rozmiary_warstw, x_train, y_train, epoki, docelowy_blad, wsp_nauki, momentum, czy_bias, losowa_kol, co_ile_epok, plik_logu)
 
     zapisz_model(plik_modelu, czy_bias, wagi, biasy)
-    print(f"\nUczenie zakończone w czasie: {koniec - poczatek:.4f} s")
     print(f"Koniec na epoce: {epoka}, błąd MSE: {blad:.6f}")
 
-    print("\n--- TEST PO ZAKOŃCZENIU NAUKI ---")
     rzeczywiste_wyjscia = testuj_siec(x_test, y_test, wagi, biasy, czy_bias, plik_logu)
 
     if komenda == "trenuj_podzial":
-        macierz, poprawne = wyswietl_macierz_i_metryki(y_test, rzeczywiste_wyjscia, nazwy_klas, n_wyjsc)
-        print("Skuteczność generalizacji (zbiór testowy):")
-        drukuj_metryki(macierz, nazwy_klas, n_wyjsc, poprawne, len(x_test))
+        macierz, poprawne = oblicz_macierz_pomylek(y_test, rzeczywiste_wyjscia, n_wyjsc)
+        print("\nSkuteczność generalizacji (zbiór testowy):")
+        wypisz_metryki_dokladnosci(macierz, nazwy_klas, n_wyjsc, poprawne, len(x_test))
+        
     else:
         print("\nStany wyjściowe:")
         for i in range(len(x_test)):
-            wyjscie = [round(v, 4) for v in rzeczywiste_wyjscia[i]]
-            print(f"  Wejście: {x_test[i]} -> Wyjście: {wyjscie}")
+            wyjscie_zaokraglone = []
+            for wartosc in rzeczywiste_wyjscia[i]:
+                wyjscie_zaokraglone.append(round(wartosc, 4))
+                
+            print(f"  Wejście: {x_test[i]} daje: Wyjście: {wyjscie_zaokraglone}")
 
         print("\nStany warstwy ukrytej:")
         for i in range(len(x_test)):
             aktywacje = propagacja_w_przod(x_test[i], wagi, biasy, czy_bias)
-            ukryta = [round(v, 4) for v in aktywacje[0]]
-            print(f"  Wejście: {x_test[i]} -> Stan ukryty: {ukryta}")
+            
+            ukryta_zaokraglona = []
+            for wartosc in aktywacje[0]:
+                ukryta_zaokraglona.append(round(wartosc, 4))
+                
+            print(f"  Wejście: {x_test[i]} daje: Stan ukryty: {ukryta_zaokraglona}")
 
 def main():
     if len(sys.argv) < 2:
