@@ -27,9 +27,9 @@ def blad_pojedynczego_wzorca(oczekiwane_wyniki, rzeczywiste_wyniki):
     blad = 0.5 * blad
     return blad
 
-def blad_globalny_mse(lista_bledow_wzorcow):
+def blad_globalny_mse(lista_bledow_wzorcow, liczba_neuronow_wyjsciowych):
     suma_wszystkich_bledow = sum(lista_bledow_wzorcow)
-    blad_sredniokwadratowy = suma_wszystkich_bledow / len(lista_bledow_wzorcow)
+    blad_sredniokwadratowy = suma_wszystkich_bledow / (len(lista_bledow_wzorcow) * liczba_neuronow_wyjsciowych)
     return blad_sredniokwadratowy
 
 def oblicz_precyzje(prawdziwie_pozytywne, falszywie_pozytywne):

@@ -74,7 +74,8 @@ def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, doce
 
             wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = propagacja_wsteczna(wejscie, aktywacje_wartsw, oczekiwane_wyjscie, wagi, biasy, wspolczynnik_nauki, momentum, poprzednie_zmiany_wag, poprzednie_zmiany_biasow, czy_bias)
 
-        globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce)
+        liczba_wyjsc = len(oczekiwane_wyjscia[0])
+        globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce, liczba_wyjsc)
 
         if epoka == 1 or epoka % co_ile_zapis_log == 0:
             historia_bledow.append([epoka, globalny_mse])
