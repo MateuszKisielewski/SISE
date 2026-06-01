@@ -18,6 +18,9 @@ def rysuj_wykres_mse(plik_wejsciowy, plik_wyjsciowy):
     plt.figure(figsize=(10, 6))
     plt.plot(df['Epoka'], df['blad_glowny'], marker='o', linestyle='-', color='b', markersize=4)
     
+    plt.xlim(left=0)
+    plt.ylim(bottom=0)
+    
     plt.title('Spadek błędu globalnego (MSE) w procesie nauki')
     plt.xlabel('Epoka')
     plt.ylabel('Błąd globalny (MSE)')
