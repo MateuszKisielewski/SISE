@@ -27,26 +27,25 @@ def blad_pojedynczego_wzorca(oczekiwane_wyniki, rzeczywiste_wyniki):
     blad = 0.5 * blad
     return blad
 
-def blad_globalny_mse(lista_bledow):
-    suma_bledow = sum(lista_bledow)
-    mse = suma_bledow / len(lista_bledow)
-    return mse
+def blad_globalny_mse(lista_bledow_wzorcow, liczba_neuronow_wyjsciowych):
+    suma_wszystkich_bledow = sum(lista_bledow_wzorcow)
+    blad_sredniokwadratowy = suma_wszystkich_bledow / (len(lista_bledow_wzorcow) * liczba_neuronow_wyjsciowych)
+    return blad_sredniokwadratowy
 
-def oblicz_precyzje(true_positives, false_positives):
-    if true_positives == 0 and false_positives == 0:
+def oblicz_precyzje(prawdziwie_pozytywne, falszywie_pozytywne):
+    if prawdziwie_pozytywne == 0 and falszywie_pozytywne == 0:
         return 0.0
-    return true_positives / (true_positives + false_positives)
+    return prawdziwie_pozytywne / (prawdziwie_pozytywne + falszywie_pozytywne)
 
-def oblicz_czulosc(prawdziwie_pozytywnme, falszywie_negatywne):
-    if prawdziwie_pozytywnme == 0 and falszywie_negatywne == 0:
+def oblicz_czulosc(prawdziwie_pozytywne, falszywie_negatywne):
+    if prawdziwie_pozytywne == 0 and falszywie_negatywne == 0:
         return 0.0
-    return prawdziwie_pozytywnme / (prawdziwie_pozytywnme + falszywie_negatywne)
+    return prawdziwie_pozytywne / (prawdziwie_pozytywne + falszywie_negatywne)
 
-def oblicz_f1_score(precision, recall):
-    if precision + recall == 0:
+def oblicz_f1_score(precyzja, czulosc):
+    if precyzja + czulosc == 0:
         return 0.0
-    return 2 * (precision * recall) / (precision + recall)
-
+    return 2 * (precyzja * czulosc) / (precyzja + czulosc)
 def pochodna_sigmoidy(x):
     return x * (1 - x)
 

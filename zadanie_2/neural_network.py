@@ -1,7 +1,7 @@
 import random
 
-from zadanie_2.data_tools import zapisz_historie_nauki, zapisz_log_testowy
-from zadanie_2.formulas import propagacja_w_przod, blad_pojedynczego_wzorca, propagacja_wsteczna, blad_globalny_mse
+from data_tools import zapisz_historie_nauki, zapisz_log_testowy
+from formulas import propagacja_w_przod, blad_pojedynczego_wzorca, propagacja_wsteczna, blad_globalny_mse
 
 
 def inicjalizuj_siec(rozmiary_warstw, czy_bias):
@@ -47,6 +47,10 @@ def inicjalizuj_siec(rozmiary_warstw, czy_bias):
 
 def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, docelowy_blad, wspolczynnik_nauki, momentum, czy_bias, losowa_kolejnosc, co_ile_zapis_log, nazwa_pliku_logu):
 
+    if rozmiary_warstw[-1] != len(oczekiwane_wyjscia[0]):
+        print("Błąd: Liczba neuronów wyjściowych nie zgadza się z rozmiarem wektora odpowiedzi. Ponownie uruchom program i podaj poprawne dane")
+        return
+
     wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = inicjalizuj_siec(rozmiary_warstw, czy_bias)
     historia_bledow = []
 
@@ -70,7 +74,8 @@ def trenuj_siec(rozmiary_warstw, dane_wejsciowe, oczekiwane_wyjscia, epoki, doce
 
             wagi, biasy, poprzednie_zmiany_wag, poprzednie_zmiany_biasow = propagacja_wsteczna(wejscie, aktywacje_wartsw, oczekiwane_wyjscie, wagi, biasy, wspolczynnik_nauki, momentum, poprzednie_zmiany_wag, poprzednie_zmiany_biasow, czy_bias)
 
-        globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce)
+        liczba_wyjsc = len(oczekiwane_wyjscia[0])
+        globalny_mse = blad_globalny_mse(bledy_wzorcow_w_epoce, liczba_wyjsc)
 
         if epoka == 1 or epoka % co_ile_zapis_log == 0:
             historia_bledow.append([epoka, globalny_mse])
