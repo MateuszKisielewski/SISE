@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import accuracy_score
-
+ komentarz_commit
 def trenuj_model(plik_danych, test_rozmiar, max_glebokosc, ziarno, plik_drzewa, plik_wykresu):
 
     df = pd.read_csv(plik_danych)

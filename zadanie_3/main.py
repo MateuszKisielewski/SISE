@@ -2,7 +2,7 @@ import argparse
 from trenowanie import trenuj_model
 from testowanie import przewiduj_wynik
 
-def zdefiniuj_argumenty():
+def zdefiniuj_argumenty(): komentarz_commit
     parser = argparse.ArgumentParser()
     
     parser.add_argument('--tryb', type=str, required=True, choices=['model', 'test'], help="Wybierz tryb działania: 'model' do trenowania, 'test' do sprawdzania wyników")

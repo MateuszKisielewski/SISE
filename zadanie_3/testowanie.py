@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
 import os
-
+  komentarz_commit
 def przewiduj_wynik(plik_drzewa, statystyki_meczowe):
 
     model = joblib.load(plik_drzewa)
