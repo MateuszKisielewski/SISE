@@ -35,13 +35,7 @@ def main():
     args = zdefiniuj_argumenty()
 
     if args.tryb == 'model':
-        trenuj_model(plik_danych=args.dane,
-            test_rozmiar=args.test_rozmiar,
-            max_glebokosc=args.max_glebokosc,
-            ziarno=args.ziarno,
-            plik_drzewa=args.plik_drzewa,
-            plik_wykresu=args.plik_wykresu
-        )
+        trenuj_model(args.dane, args.test_rozmiar, args.max_glebokosc, args.ziarno, args.plik_drzewa, args.plik_wykresu)
 
     else:
         if args.tryb == 'test':

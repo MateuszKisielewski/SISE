@@ -12,7 +12,7 @@ def przewiduj_wynik(plik_drzewa, statystyki_meczowe):
 
     wynik_surowy = model.predict(df_wejscie)[0]
     slownik_wynikow = {'H': 'WYGRANA GOSPODARZY', 'D': 'REMIS', 'A': 'WYGRANA GOŚCI'}
-    czytelny_wynik = slownik_wynikow.get(wynik_surowy, "Nieznany")
+    czytelny_wynik = slownik_wynikow.get(wynik_surowy)
 
     sciezka_wezlow = model.decision_path(df_wejscie)
     indeksy_wezlow = sciezka_wezlow.indices
@@ -21,7 +21,6 @@ def przewiduj_wynik(plik_drzewa, statystyki_meczowe):
     
     for i, wezel in enumerate(indeksy_wezlow):
         if model.tree_.children_left[wezel] == model.tree_.children_right[wezel]:
-            print(f" -> KROK {i+1}: Koniec ścieżki - jest wynik")
             break
             
         cecha = cechy[model.tree_.feature[wezel]]
@@ -32,6 +31,6 @@ def przewiduj_wynik(plik_drzewa, statystyki_meczowe):
             znak = "<="
         else:
             znak = ">"
-        print(f" -> KROK {i+1}: Zbadano '{cecha}'. Twoja wartość ({podana_wartosc}) jest {znak} od progu ({prog:.2f})")
+        print(f"Krok nr. {i+1}: Sprawdzenie dla:'{cecha}'. Twoja wartość ({podana_wartosc}) jest {znak} od progu ({prog:.2f})")
 
-    print(f" OSTATECZNY WYNIK: *** {czytelny_wynik} ***")
+    print(f"Wynik: {czytelny_wynik}")
