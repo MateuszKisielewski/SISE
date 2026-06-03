@@ -1,7 +1,9 @@
 import pandas as pd
 import joblib
-import os
-  komentarz_commit
+import warnings
+
+warnings.filterwarnings("ignore")
+
 def przewiduj_wynik(plik_drzewa, statystyki_meczowe):
 
     model = joblib.load(plik_drzewa)
@@ -14,23 +16,12 @@ def przewiduj_wynik(plik_drzewa, statystyki_meczowe):
     slownik_wynikow = {'H': 'WYGRANA GOSPODARZY', 'D': 'REMIS', 'A': 'WYGRANA GOŚCI'}
     czytelny_wynik = slownik_wynikow.get(wynik_surowy)
 
-    sciezka_wezlow = model.decision_path(df_wejscie)
-    indeksy_wezlow = sciezka_wezlow.indices
+    prawdopodobienstwa = model.predict_proba(df_wejscie)[0]
+    klasy = model.classes_
     
-    print("Drzewo sprawdziło następujące reguły:")
-    
-    for i, wezel in enumerate(indeksy_wezlow):
-        if model.tree_.children_left[wezel] == model.tree_.children_right[wezel]:
-            break
-            
-        cecha = cechy[model.tree_.feature[wezel]]
-        prog = model.tree_.threshold[wezel]
-        podana_wartosc = df_wejscie.iloc[0][cecha]
-        
-        if podana_wartosc <= prog:
-            znak = "<="
-        else:
-            znak = ">"
-        print(f"Krok nr. {i+1}: Sprawdzenie dla:'{cecha}'. Twoja wartość ({podana_wartosc}) jest {znak} od progu ({prog:.2f})")
+    for klasa, prawdopodobienstwo in zip(klasy, prawdopodobienstwa):
+        nazwa = slownik_wynikow.get(klasa)
+        procent = prawdopodobienstwo * 100
+        print(f"{nazwa}: {procent:.1f}% głosów")
 
     print(f"Wynik: {czytelny_wynik}")
