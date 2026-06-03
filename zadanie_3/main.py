@@ -13,6 +13,7 @@ def zdefiniuj_argumenty():
     parser.add_argument('--liczba_drzew', type=int, default=100)
     parser.add_argument('--ziarno', type=int, default=67)
     parser.add_argument('--plik_drzewa', type=str, default='wytrenowane_drzewo.pkl')
+    parser.add_argument('--plik_wykresu', type=str, default='wykres_drzewa.png')
 
     parser.add_argument('--gole_polowa_dom', type=int, default=0)
     parser.add_argument('--gole_polowa_gosc', type=int, default=0)
@@ -35,7 +36,7 @@ def main():
     args = zdefiniuj_argumenty()
 
     if args.tryb == 'model':
-        trenuj_model(args.dane, args.test_rozmiar, args.max_glebokosc, args.liczba_drzew, args.ziarno, args.plik_drzewa, args.plik_wykresu)
+        trenuj_model(args.dane, args.test_rozmiar, args.max_glebokosc, args.liczba_drzew, args.ziarno, args.plik_drzewa)
 
     else:
         if args.tryb == 'test':
@@ -55,7 +56,7 @@ def main():
                 'Czerwone_Dom': args.czerwone_dom,
                 'Czerwone_Gosc': args.czerwone_gosc
             }
-            przewiduj_wynik(args.plik_drzewa, statystyki)
+            przewiduj_wynik(args.plik_drzewa, args.plik_wykresu, statystyki)
 
 if __name__ == "__main__":
     main()
