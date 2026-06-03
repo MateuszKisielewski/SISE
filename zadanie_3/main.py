@@ -13,7 +13,6 @@ def zdefiniuj_argumenty():
     parser.add_argument('--liczba_drzew', type=int, default=100)
     parser.add_argument('--ziarno', type=int, default=67)
     parser.add_argument('--plik_drzewa', type=str, default='wytrenowane_drzewo.pkl')
-    parser.add_argument('--plik_wykresu', type=str, default='wykres_drzewa.png')
 
     parser.add_argument('--gole_polowa_dom', type=int, default=0)
     parser.add_argument('--gole_polowa_gosc', type=int, default=0)

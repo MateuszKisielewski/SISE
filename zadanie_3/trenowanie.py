@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
-def trenuj_model(plik_danych, test_rozmiar, max_glebokosc, liczba_drzew, ziarno, plik_drzewa, plik_wykresu):
+def trenuj_model(plik_danych, test_rozmiar, max_glebokosc, liczba_drzew, ziarno, plik_drzewa):
 
     df = pd.read_csv(plik_danych)
     y = df['Wynik']
