@@ -65,3 +65,26 @@ def przewiduj_wynik(plik_drzewa, plik_wykresu, statystyki_meczowe):
         plt.title(f"Drzewo decyzyjne", fontsize=20)
         plt.savefig(plik_wykresu, bbox_inches='tight')
         plt.close()
+
+def przewiduj_zbior(plik_drzewa, plik_danych_testowych):
+
+    model = joblib.load(plik_drzewa)
+    df = pd.read_csv(plik_danych_testowych)
+
+    if 'Wynik' not in df.columns:
+        print("Plik testowy musi zawierać kolumnę 'Wynik'")
+        return
+
+    y_prawdziwe = df['Wynik']
+    x_testowe = df.drop(columns=['Wynik'])
+
+    y_przewidziane = model.predict(x_testowe)
+
+    skutecznosc = accuracy_score(y_prawdziwe, y_przewidziane)
+    ilosc_meczow = len(y_prawdziwe)
+    poprawne_trafienia = sum(y_prawdziwe == y_przewidziane)
+
+    print(f" Przeanalizowano meczów : {ilosc_meczow}")
+    print(f" Poprawnie wytypowane : {poprawne_trafienia}")
+    print(f" Błędne wytypowanie : {ilosc_meczow - poprawne_trafienia}")
+    print(f" Skuteczność : {skutecznosc * 100:.2f}%")
