@@ -1,6 +1,8 @@
 import pandas as pd
 import joblib
 import warnings
+
+from sklearn.metrics import accuracy_score
 from sklearn.tree import plot_tree
 import matplotlib.pyplot as plt
 
